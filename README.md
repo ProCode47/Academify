@@ -16,7 +16,6 @@ please leave a ✅ emoji after each functionality you've implemented
 ### Notification screen to get notified on result upload
 ### Comment on result
 ### Download result
-### Message course adviser
 ### Logout
 ## For Parents: (Assigned to Paschal)
 ### Registration  ✅
@@ -25,7 +24,6 @@ please leave a ✅ emoji after each functionality you've implemented
 ### Profile
 ### View student’s result
 ### Comment on result
-### Message directly with course adviser
 ### Download result
 ### See result analytics and CGPA
 ### Get text and email notification on result
@@ -40,6 +38,5 @@ please leave a ✅ emoji after each functionality you've implemented
 ### Suspend or delete student
 ### Upload result
 ### View comments on results
-### Chat with students & parents
 ### See analytics on each result and semester
 ### Logout
