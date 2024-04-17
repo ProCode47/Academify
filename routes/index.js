@@ -1,8 +1,15 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
 const authController = require('../controllers/auth');
 const studentController = require('../controllers/student');
 const courseController = require('../controllers/course');
+const uploadController = require('../controllers/result');
+const semesterController = require('../controllers/semester');
+
+// Multer middleware setup to handle file uploads
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 // Register courses for a student
 router.post('/register', courseController.registerCourses);
@@ -22,5 +29,11 @@ router.get('/student/:regNo', studentController.getStudentByRegNo);
 
 // Courses routes
 router.post('/course/register', courseController.registerCourses);
+
+// Result routes
+router.post('/upload', upload.single('file'), uploadController.uploadResult);
+
+// Semester routes
+router.post('/semester/create', semesterController.createSemester);
 
 module.exports = router;
