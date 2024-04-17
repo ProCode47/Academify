@@ -33,10 +33,10 @@ please leave a ✅ emoji after each functionality you've implemented
 ### Login  ✅
 ### Dashboard
 ### Profile
-### Create semester
+### Create semester ✅
 ### View students
 ### Suspend or delete student
-### Upload result
+### Upload result ✅
 ### View comments on results
 ### See analytics on each result and semester
 ### Logout
