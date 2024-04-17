@@ -18,9 +18,9 @@ router.post('/login/parent', authController.loginParent);
 router.post('/login/courseadvisor', authController.loginCourseAdvisor);
 
 // Student routes
-router.get('/:regNo', studentController.getStudentByRegNo);
+router.get('/student/:regNo', studentController.getStudentByRegNo);
 
 // Courses routes
-router.post('/register', courseController.registerCourses);
+router.post('/course/register', courseController.registerCourses);
 
 module.exports = router;
