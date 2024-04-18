@@ -1,11 +1,15 @@
 // controllers/authController.js
 
+const dotenv = require('dotenv');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User, Student, Parent, CourseAdvisor } = require("../models");
+const config = require('../config/config')
+
+dotenv.config();
 
 const generateToken = (user) => {
-  return jwt.sign({ userId: user._id, email: user.email }, "your-secret-key", {
+  return jwt.sign({ userId: user._id, email: user.email }, config.secretKey, {
     expiresIn: "1h",
   });
 };

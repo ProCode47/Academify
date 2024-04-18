@@ -14,12 +14,14 @@ const userSchema = new Schema({
 const studentSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     reg: { type: String, required: true },
+    level: {type: Number, required: true}
     // Add other student-specific fields if needed
 }, { timestamps: true });
 
 // Define Parent schema
 const parentSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    child: { type: Schema.Types.ObjectId, ref: 'Student', required: true}
     // Add other parent-specific fields if needed
 }, { timestamps: true });
 
@@ -48,9 +50,33 @@ const resultSchema = new Schema({
 
 // Define Semester schema
 const semesterSchema = new Schema({
-    name: { type: String, required: true },
-    startDate: { type: Date, required: true },
-    endDate: { type: Date, required: true },
+    name: { type: String, enum: ['Harmattan', 'Rain'], required: true },
+    session: {type: String, required: true}
+    // Add other semester fields if needed
+}, { timestamps: true });
+
+// Define Comments schema
+const commentSchema = new Schema({
+    comments: [
+        { 
+            author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+            comment: {type: String, required: true } 
+        }
+    ],
+    course: { type: Schema.Types.ObjectId, ref: 'Course', required: true },
+    semester: { type: Schema.Types.ObjectId, ref: 'Semester', required: true }
+    // Add other semester fields if needed
+}, { timestamps: true });
+
+// Define Notification schema
+const notificationSchema = new Schema({
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true},
+    notification: [
+        { 
+            message: {type: String, required: true },
+            status: { type: String, enum: ['read', 'unread'], required: true }
+        }
+    ]
     // Add other semester fields if needed
 }, { timestamps: true });
 
@@ -61,5 +87,7 @@ const CourseAdvisor = mongoose.model('CourseAdvisor', courseAdvisorSchema);
 const Course = mongoose.model('Course', courseSchema);
 const Result = mongoose.model('Result', resultSchema);
 const Semester = mongoose.model('Semester', semesterSchema);
+const Comment = mongoose.model('Comment', commentSchema);
+const Notification = mongoose.model('Notification', notificationSchema)
 
-module.exports = { User, Student, Parent, CourseAdvisor, Course, Result, Semester };
+module.exports = { User, Student, Parent, CourseAdvisor, Course, Result, Semester, Comment, Notification };

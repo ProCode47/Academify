@@ -3,6 +3,7 @@ const router = express.Router();
 const authController = require('../controllers/auth');
 const studentController = require('../controllers/student');
 const courseController = require('../controllers/course');
+const parentController = require('../controllers/parent')
 
 // Register courses for a student
 router.post('/register', courseController.registerCourses);
@@ -22,5 +23,8 @@ router.get('/student/:regNo', studentController.getStudentByRegNo);
 
 // Courses routes
 router.post('/course/register', courseController.registerCourses);
+
+//Parent routes
+router.get('/profile/parent', parentController.getProfile);
 
 module.exports = router;
