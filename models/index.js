@@ -1,65 +1,100 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 // Define User schema (common for all roles)
-const userSchema = new Schema({
+const userSchema = new Schema(
+  {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, enum: ['student', 'parent', 'course_advisor'], required: true },
-}, { timestamps: true });
+    role: {
+      type: String,
+      enum: ["student", "parent", "course_advisor"],
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 
 // Define Student schema
-const studentSchema = new Schema({
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+const studentSchema = new Schema(
+  {
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     reg: { type: String, required: true },
+    courses: [{ type: Schema.Types.ObjectId, ref: "Course" }], // Array to store registered courses
     // Add other student-specific fields if needed
-}, { timestamps: true });
+  },
+  { timestamps: true }
+);
 
 // Define Parent schema
-const parentSchema = new Schema({
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+const parentSchema = new Schema(
+  {
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     // Add other parent-specific fields if needed
-}, { timestamps: true });
+  },
+  { timestamps: true }
+);
 
 // Define Course Advisor schema
-const courseAdvisorSchema = new Schema({
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+const courseAdvisorSchema = new Schema(
+  {
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     // Add other course advisor-specific fields if needed
-}, { timestamps: true });
+  },
+  { timestamps: true }
+);
 
 // Define Course schema
-const courseSchema = new Schema({
+const courseSchema = new Schema(
+  {
     name: { type: String, required: true },
     code: { type: String, required: true, unique: true },
     credits: { type: Number, required: true },
+    type: { type: String, required: true, default: "Complusory" },
     // Add other course fields if needed
-}, { timestamps: true });
+  },
+  { timestamps: true }
+);
 
 // Define Result schema
-const resultSchema = new Schema({
-    student: { type: Schema.Types.ObjectId, ref: 'Student', required: true },
-    course: { type: Schema.Types.ObjectId, ref: 'Course', required: true },
+const resultSchema = new Schema(
+  {
+    student: { type: Schema.Types.ObjectId, ref: "Student", required: true },
+    course: { type: Schema.Types.ObjectId, ref: "Course", required: true },
     grade: { type: String, required: true },
-    semester: { type: Schema.Types.ObjectId, ref: 'Semester', required: true },
+    semester: { type: Schema.Types.ObjectId, ref: "Semester", required: true },
     // Add other result fields if needed
-}, { timestamps: true });
+  },
+  { timestamps: true }
+);
 
 // Define Semester schema
-const semesterSchema = new Schema({
+const semesterSchema = new Schema(
+  {
     name: { type: String, required: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     // Add other semester fields if needed
-}, { timestamps: true });
+  },
+  { timestamps: true }
+);
 
-const User = mongoose.model('User', userSchema);
-const Student = mongoose.model('Student', studentSchema);
-const Parent = mongoose.model('Parent', parentSchema);
-const CourseAdvisor = mongoose.model('CourseAdvisor', courseAdvisorSchema);
-const Course = mongoose.model('Course', courseSchema);
-const Result = mongoose.model('Result', resultSchema);
-const Semester = mongoose.model('Semester', semesterSchema);
+const User = mongoose.model("User", userSchema);
+const Student = mongoose.model("Student", studentSchema);
+const Parent = mongoose.model("Parent", parentSchema);
+const CourseAdvisor = mongoose.model("CourseAdvisor", courseAdvisorSchema);
+const Course = mongoose.model("Course", courseSchema);
+const Result = mongoose.model("Result", resultSchema);
+const Semester = mongoose.model("Semester", semesterSchema);
 
-module.exports = { User, Student, Parent, CourseAdvisor, Course, Result, Semester };
+module.exports = {
+  User,
+  Student,
+  Parent,
+  CourseAdvisor,
+  Course,
+  Result,
+  Semester,
+};

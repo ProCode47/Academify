@@ -8,9 +8,9 @@ please leave a ✅ emoji after each functionality you've implemented
 ## For Students: (Assigned to Victor)
 ### Registration  ✅
 ### Login  ✅
-### Dashboard
-### Profile
-### Register courses
+### Dashboard ✅
+### Profile ✅
+### Register courses ✅
 ### Check results
 ### Result analytics (Show all results and CGPA)
 ### Notification screen to get notified on result upload
