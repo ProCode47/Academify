@@ -37,8 +37,18 @@ const registerUser = async (req, res, userType) => {
     let roleSpecificData;
     switch (userType) {
       case "student":
-        const { reg } = req.body;
-        roleSpecificData = new Student({ user: newUser._id, reg });
+        const { reg, advisor } = req.body;
+        const classAdvisor = await CourseAdvisor.findOne({ _id: advisor });
+        roleSpecificData = new Student({
+          user: newUser._id,
+          reg,
+          courseAdvisor: classAdvisor,
+        });
+        await roleSpecificData.save();
+
+        // Add the student to the course advisor's list of students
+        classAdvisor.students.push(roleSpecificData._id);
+        await classAdvisor.save();
         break;
       case "parent":
         roleSpecificData = new Parent({ user: newUser._id });

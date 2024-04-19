@@ -23,6 +23,23 @@ const studentSchema = new Schema(
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     reg: { type: String, required: true },
     courses: [{ type: Schema.Types.ObjectId, ref: "Course" }], // Array to store registered courses
+    courseAdvisor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "CourseAdvisor",
+    },
+        messages: [
+      {
+        sender: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        content: String,
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
     // Add other student-specific fields if needed
   },
   { timestamps: true }
@@ -32,6 +49,23 @@ const studentSchema = new Schema(
 const parentSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    messages: [
+      {
+        sender: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        content: String,
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+    children: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Student'
+    }]
     // Add other parent-specific fields if needed
   },
   { timestamps: true }
@@ -41,6 +75,25 @@ const parentSchema = new Schema(
 const courseAdvisorSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    students: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Student",
+      },
+    ],
+    messages: [
+      {
+        sender: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        content: String,
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
     // Add other course advisor-specific fields if needed
   },
   { timestamps: true }

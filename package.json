@@ -1,7 +1,7 @@
 {
-  "name": "YoTalk",
+  "name": "Academify",
   "version": "1.0.0",
-  "description": "Social platform for talking drummers",
+  "description": "server support for Academify",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js"
