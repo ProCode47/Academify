@@ -81,6 +81,12 @@ const courseAdvisorSchema = new Schema(
         ref: "Student",
       },
     ],
+    parents: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Parent",
+      },
+    ],
     messages: [
       {
         sender: {
@@ -127,19 +133,6 @@ const resultSchema = new Schema(
 const semesterSchema = new Schema({
     name: { type: String, enum: ['Harmattan', 'Rain'], required: true },
     session: {type: String, required: true}
-    // Add other semester fields if needed
-}, { timestamps: true });
-
-// Define Comments schema
-const commentSchema = new Schema({
-    comments: [
-        { 
-            author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-            comment: {type: String, required: true } 
-        }
-    ],
-    course: { type: Schema.Types.ObjectId, ref: 'Course', required: true },
-    semester: { type: Schema.Types.ObjectId, ref: 'Semester', required: true }
     // Add other semester fields if needed
 }, { timestamps: true });
 
