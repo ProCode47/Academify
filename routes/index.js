@@ -4,6 +4,7 @@ const authController = require('../controllers/auth');
 const studentController = require('../controllers/student');
 const courseController = require('../controllers/course');
 const messageController = require('../controllers/messages')
+const parentController = require('../controllers/parent')
 
 // Register courses for a student
 router.post('/register', courseController.registerCourses);
@@ -37,5 +38,8 @@ router.post('/api/messages/parent/advisor/:studentId', messageController.sendPar
 router.get('/api/messages/parent/:parentId', messageController.getMessagesFromParent);
 
 
+
+//Parent routes
+router.get('/profile/parent', parentController.getProfile);
 
 module.exports = router;
