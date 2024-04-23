@@ -95,9 +95,35 @@ const courseAdvisorSchema = new Schema(
       },
     ],
     // Add other course advisor-specific fields if needed
+    email: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    password: {
+      type: String,
+      required: true
+    },
+    photo: {
+      type: String // Assuming you store the URL of the photo
+    },
+    staffId: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    level: {
+      type: String,
+      required: true
+    }
   },
   { timestamps: true }
 );
+
+// Define a virtual to populate the name field based on the user's first and last name
+courseAdvisorSchema.virtual('name').get(function() {
+  return `${this.user.firstName} ${this.user.lastName}`;
+});
 
 // Define Course schema
 const courseSchema = new Schema(
