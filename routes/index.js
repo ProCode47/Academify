@@ -5,6 +5,8 @@ const studentController = require('../controllers/student');
 const courseController = require('../controllers/course');
 const messageController = require('../controllers/messages')
 const courseAdvisorController = require('../controllers/courseAdvisor');
+const resultController = require('../controllers/result');
+const authenticate = require('../middleware/authMiddleware');
 
 // Register courses for a student
 router.post('/register', courseController.registerCourses);
@@ -39,7 +41,9 @@ router.get('/api/messages/parent/:parentId', messageController.getMessagesFromPa
 
 // Profile Routes for course advisor
 router.get('/profile', courseAdvisorController.getProfile);
-router.put('/update-password',courseAdvisorController.updatePassword);
+router.put('/update-password', authenticate, courseAdvisorController.updatePassword);
 
+// Route to upload results (requires authentication)
+router.post('/upload-results', authenticate, resultController.uploadResults);
 
 module.exports = router;
