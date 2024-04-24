@@ -22,7 +22,6 @@ router.post('/login/courseadvisor', authController.loginCourseAdvisor);
 
 // Student routes
 router.get('/student/:regNo', studentController.getStudentByRegNo);
-router.post('/student/register', courseController.registerCourses);
 
 // Courses routes
 router.get('/course/load', courseController.loadCourses);
@@ -42,6 +41,9 @@ router.get('/api/messages/parent/:parentId', messageController.getMessagesFromPa
 // Profile Routes for course advisor
 router.get('/profile', courseAdvisorController.getProfile);
 router.put('/update-password', authenticate, courseAdvisorController.updatePassword);
+
+// Route to get all course advisors
+router.get('/advisors/get-all', courseAdvisorController.getAllCourseAdvisors);
 
 // Route to upload results (requires authentication)
 router.post('/upload-results', authenticate, resultController.uploadResults);
