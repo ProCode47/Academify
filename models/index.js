@@ -102,7 +102,8 @@ const courseAdvisorSchema = new Schema(
     ],
     // Add other course advisor-specific fields if needed
     photo: {
-      type: String // Assuming you store the URL of the photo
+      type: String, // Assuming you store the URL of the photo
+      required: false
     },
     staffId: {
       type: String,
