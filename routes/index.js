@@ -9,8 +9,6 @@ const courseAdvisorController = require('../controllers/courseAdvisor');
 const resultController = require('../controllers/result');
 const authenticate = require('../middleware/authMiddleware');
 
-// Register courses for a student
-router.post('/register', courseController.registerCourses);
 
 // Register routes
 router.post('/register/student', authController.registerStudent);
@@ -24,6 +22,7 @@ router.post('/login/courseadvisor', authController.loginCourseAdvisor);
 
 // Student routes
 router.get('/student/:regNo', studentController.getStudentByRegNo);
+router.post('/student/register', courseController.registerCourses);
 
 // Courses routes
 router.get('/course/load', courseController.loadCourses);
