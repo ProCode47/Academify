@@ -175,7 +175,6 @@ const CourseAdvisor = mongoose.model('CourseAdvisor', courseAdvisorSchema);
 const Course = mongoose.model('Course', courseSchema);
 const Result = mongoose.model('Result', resultSchema);
 const Semester = mongoose.model('Semester', semesterSchema);
-const Comment = mongoose.model('Comment', commentSchema);
 const Notification = mongoose.model('Notification', notificationSchema)
 
-module.exports = { User, Student, Parent, CourseAdvisor, Course, Result, Semester, Comment, Notification };
+module.exports = { User, Student, Parent, CourseAdvisor, Course, Result, Semester, Notification };
