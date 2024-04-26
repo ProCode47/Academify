@@ -89,14 +89,35 @@ const loginUser = async (req, res, userType) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
+    let userID;
+    
+    // Get the respective ID based on user type
+    switch (userType) {
+      case "student":
+        const student = await Student.findOne({ user: user._id });
+        userID = student._id;
+        break;
+      case "parent":
+        const parent = await Parent.findOne({ user: user._id });
+        userID = parent._id;
+        break;
+      case "course_advisor":
+        const courseAdvisor = await CourseAdvisor.findOne({ user: user._id });
+        userID = courseAdvisor._id;
+        break;
+      default:
+        break;
+    }
+
     // Generate token
     const token = generateToken(user);
-    res.status(200).json({ token });
+    res.status(200).json({ token, userID });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 module.exports = {
   registerStudent: async (req, res) => registerUser(req, res, "student"),
