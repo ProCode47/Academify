@@ -18,7 +18,6 @@ async function getProfile(req, res) {
      name: `${req.user.firstName} ${req.user.lastName}`,
      email: req.user.email,
      photo: courseAdvisor.photo,
-     staffId: courseAdvisor.staffId,
      level: courseAdvisor.level,
      // Add more fields as needed
    };

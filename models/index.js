@@ -105,11 +105,6 @@ const courseAdvisorSchema = new Schema(
       type: String, // Assuming you store the URL of the photo
       required: false
     },
-    staffId: {
-      type: String,
-      required: false,
-      unique: false
-    },
     level: {
       type: String,
       required: false
