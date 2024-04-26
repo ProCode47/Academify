@@ -108,7 +108,6 @@ const courseAdvisorSchema = new Schema(
     staffId: {
       type: String,
       required: false,
-      unique: true
     },
     level: {
       type: String,
