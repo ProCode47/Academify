@@ -19,7 +19,26 @@ async function uploadResults(req, res) {
     return res.status(500).json({ message: 'Internal server error' });
   }
 }
+// Fetch student result controller
+async function getStudentResult (req, res) {
+  try {
+    const { studentId } = req.params;
+
+    // Find results for the student
+    const results = await Result.find({ student: studentId }).populate('course');
+
+    if (!results) {
+      return res.status(404).json({ message: "No results found for the student" });
+    }
+
+    res.status(200).json({ results });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 module.exports = {
-  uploadResults
+  uploadResults,
+  getStudentResult
 };

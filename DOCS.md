@@ -19,6 +19,8 @@ GET /api/messages/student/12345
 
 In this example, `12345` is the actual ID of the student.
 ---
+## The API is live @ https://academify-f0qd.onrender.com
+so every route documented is to be called as https://academify-f0qd.onrender.com/routename i.e /register/student is to be called as https://academify-f0qd.onrender.com/register/student
 
 ## Register Routes
 
@@ -249,6 +251,64 @@ Retrieves information about a student by their registration number.
   }
   ```
 ---
+
+### Get Student Result
+
+**URL:** `/student/result/:studentId`
+
+**Method:** `GET`
+
+**Description:** Fetches the result for a specific student based on the provided student ID.
+
+**Parameters:**
+
+- `studentId` (required): The unique identifier of the student for whom the result is to be fetched.
+
+**Example:**
+
+```http
+GET /api/student/result/1234567890
+```
+
+**Response:**
+
+```json
+{
+  "results": [
+    {
+      "_id": "6115d593b8bbcd001bf18b80",
+      "student": "1234567890",
+      "course": {
+        "_id": "6115d591b8bbcd001bf18b7f",
+        "code": "MTH101",
+        "name": "Mathematics",
+        "level": 100
+      },
+      "grade": "A",
+      "semester": "6115d591b8bbcd001bf18b7e",
+      "createdAt": "2022-08-12T09:32:19.734Z",
+      "updatedAt": "2022-08-12T09:32:19.734Z",
+      "__v": 0
+    },
+    {
+      "_id": "6115d593b8bbcd001bf18b81",
+      "student": "1234567890",
+      "course": {
+        "_id": "6115d591b8bbcd001bf18b7d",
+        "code": "PHY101",
+        "name": "Physics",
+        "level": 100
+      },
+      "grade": "B",
+      "semester": "6115d591b8bbcd001bf18b7e",
+      "createdAt": "2022-08-12T09:32:19.734Z",
+      "updatedAt": "2022-08-12T09:32:19.734Z",
+      "__v": 0
+    }
+  ]
+}
+```
+---
 ## Courses Routes
 
 ### Register Courses
@@ -401,23 +461,5 @@ Fetches messages from a parent.
 - **Method:** `GET`
 - **Description:** Fetch messages from a parent.
 - **Example Response:** Array of message objects
-
----
-
-
-Retrieves the profile of the parent.
-
-- **URL:** `/profile/parent`
-- **Method:** `GET`
-- **Description:** Retrieve the profile of the parent.
-- **Example Response:**
-  ```json
-  {
-    "_id": "6152f8a91b6cf4a2443d2e4e",
-    "firstName": "Jane",
-    "lastName": "Doe",
-    "email": "jane.doe@example.com"
-  }
-  ```
 
 ---

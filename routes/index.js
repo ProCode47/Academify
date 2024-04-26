@@ -22,6 +22,8 @@ router.post('/login/courseadvisor', authController.loginCourseAdvisor);
 
 // Student routes
 router.get('/student/:regNo', studentController.getStudentByRegNo);
+router.get('/student/result/:studentId', resultController.getStudentResult);
+
 
 // Courses routes
 router.get('/course/load', courseController.loadCourses);
