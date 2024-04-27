@@ -463,3 +463,158 @@ Fetches messages from a parent.
 - **Example Response:** Array of message objects
 
 ---
+## Course Adviser Routes
+### `getProfile`
+
+#### Description
+Retrieves the profile information of the authenticated course advisor.
+
+- **URL:** `/profile/advisors`
+- **Method:** `GET`
+- **Auth Required:** Yes
+- **Permissions Required:** None
+
+#### Responses
+
+- **200 OK:** Successfully retrieved the profile information.
+  - **Content:** JSON object containing the profile information.
+- **401 Unauthorized:** Authentication failure.
+  - **Content:** JSON object with an error message.
+- **404 Not Found:** Course advisor not found.
+  - **Content:** JSON object with an error message.
+- **500 Internal Server Error:** An error occurred on the server while processing the request.
+  - **Content:** JSON object with an error message.
+
+#### Example Response
+
+```json
+{
+  "profile": {
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "photo": "path/to/photo.jpg",
+    "level": "100"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsIn..."
+}
+```
+
+---
+
+### `updatePassword`
+
+#### Description
+Updates the password of the authenticated course advisor.
+
+- **URL:** `/advisors/update-password`
+- **Method:** `PUT`
+- **Auth Required:** Yes
+- **Permissions Required:** None
+
+#### Request Body
+- `newPassword` (string, required): The new password.
+
+#### Responses
+
+- **200 OK:** Password updated successfully.
+  - **Content:** JSON object with a success message.
+- **400 Bad Request:** Invalid request body or missing required fields.
+  - **Content:** JSON object with an error message.
+- **401 Unauthorized:** Authentication failure.
+  - **Content:** JSON object with an error message.
+- **404 Not Found:** Course advisor not found.
+  - **Content:** JSON object with an error message.
+- **500 Internal Server Error:** An error occurred on the server while processing the request.
+  - **Content:** JSON object with an error message.
+
+#### Example Request Body
+
+```json
+{
+  "newPassword": "newPassword123"
+}
+```
+
+#### Example Response
+
+```json
+{
+  "message": "Password updated successfully",
+  "token": "eyJhbGciOiJIUzI1NiIsIn..."
+}
+```
+
+---
+
+### 3. `getAllCourseAdvisors`
+
+#### Description
+Fetches all course advisors from the database.
+
+- **URL:** `/advisors/get-all`
+- **Method:** `GET`
+- **Auth Required:** No
+- **Permissions Required:** None
+
+#### Responses
+
+- **200 OK:** Successfully retrieved the list of course advisors.
+  - **Content:** JSON array containing details of all course advisors.
+- **500 Internal Server Error:** An error occurred on the server while processing the request.
+  - **Content:** JSON object with an error message.
+
+#### Example Response
+
+```json
+[
+  {
+    "_id": "611fc69c8f5d670015c4d78a",
+    "name": "Francesca Smith",
+    "email": "francesca@example.com"
+  },
+  {
+    "_id": "611fc6c38f5d670015c4d78b",
+    "name": "John Doe",
+    "email": "john@example.com"
+  }
+]
+```
+
+### Upload Results
+
+#### Description
+
+This controller function handles the uploading of results to the database. It expects the uploaded results to be received as JSON in the request body.
+
+- **URL:** Not applicable. This is a controller function and not directly accessible via a URL.
+- **Method:** `POST`
+- **Auth Required:** Yes
+- **Permissions Required:** None
+
+#### Request Body
+
+- `results` (array of objects): An array of result objects to be uploaded to the database.
+
+
+#### Responses
+
+- **201 Created:** Results were successfully uploaded to the database.
+  - **Content:** JSON object containing a success message and an authentication token.
+- **500 Internal Server Error:** An error occurred while processing the request on the server side.
+
+#### Example Response
+
+```json
+{
+  "message": "Results uploaded successfully",
+  "token": "eyJhbGciOiJIUzI1NiIsIn..."
+}
+```
+
+#### Error Response
+
+```json
+{
+  "message": "Internal server error"
+}
+```
