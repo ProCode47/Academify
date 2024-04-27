@@ -37,7 +37,7 @@ router.get('/api/messages/student/:studentId', messageController.getMessagesFrom
 
 // messaging between parent and course advisor
 router.post('/api/messages/parent/:parentId', messageController.sendMessageToParent);
-router.post('/api/messages/parent/advisor/:studentId', messageController.sendParentMessageToAdvisor);
+router.post('/api/messages/parent/advisor/:parentId/:advisorId', messageController.sendParentMessageToAdvisor);
 router.get('/api/messages/parent/:parentId', messageController.getMessagesFromParent);
 
 // Profile Routes for course advisor

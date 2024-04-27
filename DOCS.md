@@ -363,7 +363,7 @@ Sends a message to a student.
 - **Example Request:**
   ```json
   {
-    "sender": "Francesca",
+    "sender": "6115d591b8bbcd001bf18b7e",
     "content": "Don't forget about the upcoming exam."
   }
   ```
@@ -415,12 +415,12 @@ Sends a message to a parent.
 - **Method:** `POST`
 - **Description:** Send a message to a parent.
 - **Request Body:**
-  - `sender` (string): The ID of the sender of the message.
+  - `sender` (string): The user ID of the sender of the message.
   - `content` (string): The content of the message.
 - **Example Request:**
   ```json
   {
-    "sender": "Francesca",
+    "sender": "6115d591b8bbcd001bf18b7e",
     "content": "Your child did well in the recent test."
   }
   ```
@@ -435,7 +435,7 @@ Sends a message to a parent.
 
 Sends a message from a parent to their child's advisor.
 
-- **URL:** `/api/messages/parent/advisor/:studentId`
+- **URL:** `/api/messages/parent/advisor/:parentId/:advisorId`
 - **Method:** `POST`
 - **Description:** Send a message from a parent to their child's advisor.
 - **Request Body:**

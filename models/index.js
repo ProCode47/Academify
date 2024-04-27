@@ -27,11 +27,16 @@ const studentSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "CourseAdvisor",
     },
-        messages: [
+    messages: [
       {
         sender: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
+        },
+        receiver: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: false,
         },
         content: String,
         createdAt: {
@@ -55,6 +60,11 @@ const parentSchema = new Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
         },
+        receiver: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: false,
+        },
         content: String,
         createdAt: {
           type: Date,
@@ -62,10 +72,12 @@ const parentSchema = new Schema(
         },
       },
     ],
-    children: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Student'
-    }]
+    children: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Student",
+      },
+    ],
     // Add other parent-specific fields if needed
   },
   { timestamps: true }
@@ -103,18 +115,18 @@ const courseAdvisorSchema = new Schema(
     // Add other course advisor-specific fields if needed
     photo: {
       type: String, // Assuming you store the URL of the photo
-      required: false
+      required: false,
     },
     level: {
       type: String,
-      required: false
-    }
+      required: false,
+    },
   },
   { timestamps: true }
 );
 
 // Define a virtual to populate the name field based on the user's first and last name
-courseAdvisorSchema.virtual('name').get(function() {
+courseAdvisorSchema.virtual("name").get(function () {
   return `${this.user.firstName} ${this.user.lastName}`;
 });
 
@@ -143,33 +155,46 @@ const resultSchema = new Schema(
 );
 
 // Define Semester schema
-const semesterSchema = new Schema({
-    name: { type: String, enum: ['Harmattan', 'Rain'], required: true },
-    session: {type: String, required: true}
-    // Add other semester fields if needed
-}, { timestamps: true });
-
-// Define Notification schema
-const notificationSchema = new Schema({
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true},
-    notification: [
-        { 
-            message: {type: String, required: true },
-            status: { type: String, enum: ['read', 'unread'], required: true }
-        }
-    ]
+const semesterSchema = new Schema(
+  {
+    name: { type: String, enum: ["Harmattan", "Rain"], required: true },
+    session: { type: String, required: true },
     // Add other semester fields if needed
   },
   { timestamps: true }
 );
 
-const User = mongoose.model('User', userSchema);
-const Student = mongoose.model('Student', studentSchema);
-const Parent = mongoose.model('Parent', parentSchema);
-const CourseAdvisor = mongoose.model('CourseAdvisor', courseAdvisorSchema);
-const Course = mongoose.model('Course', courseSchema);
-const Result = mongoose.model('Result', resultSchema);
-const Semester = mongoose.model('Semester', semesterSchema);
-const Notification = mongoose.model('Notification', notificationSchema)
+// Define Notification schema
+const notificationSchema = new Schema(
+  {
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    notification: [
+      {
+        message: { type: String, required: true },
+        status: { type: String, enum: ["read", "unread"], required: true },
+      },
+    ],
+    // Add other semester fields if needed
+  },
+  { timestamps: true }
+);
 
-module.exports = { User, Student, Parent, CourseAdvisor, Course, Result, Semester, Notification };
+const User = mongoose.model("User", userSchema);
+const Student = mongoose.model("Student", studentSchema);
+const Parent = mongoose.model("Parent", parentSchema);
+const CourseAdvisor = mongoose.model("CourseAdvisor", courseAdvisorSchema);
+const Course = mongoose.model("Course", courseSchema);
+const Result = mongoose.model("Result", resultSchema);
+const Semester = mongoose.model("Semester", semesterSchema);
+const Notification = mongoose.model("Notification", notificationSchema);
+
+module.exports = {
+  User,
+  Student,
+  Parent,
+  CourseAdvisor,
+  Course,
+  Result,
+  Semester,
+  Notification,
+};

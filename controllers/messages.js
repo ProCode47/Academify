@@ -18,7 +18,7 @@ const sendMessageToStudent = async (req, res) => {
       return res.status(404).json({ message: "Student not found" });
     }
     // Store the message
-    student.messages.push({ sender, content });
+    student.messages.push({ sender, receiver: student.user, content });
     await student.save();
 
     res.status(200).json({ message: "Message sent to student successfully" });
@@ -45,7 +45,11 @@ const sendStudentMessageToAdvisor = async (req, res) => {
       return res.status(404).json({ message: "Student not found" });
     }
     // Store the message
-    student.messages.push({ sender: student.user, content });
+    student.messages.push({
+      sender: student.user,
+      receiver: student.courseAdvisor,
+      content,
+    });
     await student.save();
 
     res.status(200).json({ message: "Message sent to advisor successfully" });
@@ -94,7 +98,7 @@ const sendMessageToParent = async (req, res) => {
     }
 
     // Store the message
-    parent.messages.push({ sender, content });
+    parent.messages.push({ sender, receiver: parent.user, content });
     await parent.save();
 
     res.status(200).json({ message: "Message sent to parent successfully" });
@@ -106,7 +110,7 @@ const sendMessageToParent = async (req, res) => {
 
 const sendParentMessageToAdvisor = async (req, res) => {
   try {
-    const { parentId } = req.params;
+    const { parentId, advisorID } = req.params;
     const { content } = req.body;
 
     // Validate input
@@ -120,13 +124,27 @@ const sendParentMessageToAdvisor = async (req, res) => {
       return res.status(404).json({ message: "Parent not found" });
     }
 
-    // Store the message
-    const advisor = await CourseAdvisor.findOne({ _id: parent.advisor });
+    // Find advisor by ID
+    const advisor = await CourseAdvisor.findById(advisorID);
     if (!advisor) {
       return res.status(404).json({ message: "Advisor not found" });
     }
-    advisor.messages.push({ sender: parent.user, content });
-    await advisor.save();
+
+    // Check if the parent ID already exists in the parents array of the advisor
+    if (!advisor.parents.includes(parentId)) {
+      // Add the parent ID to the parents array
+      advisor.parents.push(parentId);
+      // Save the changes to the advisor
+      await advisor.save();
+    }
+
+    // Store the message
+    parent.messages.push({
+      sender: parent.user,
+      receiver: advisor.user,
+      content,
+    });
+    await parent.save();
 
     res.status(200).json({ message: "Message sent to advisor successfully" });
   } catch (error) {
@@ -134,6 +152,7 @@ const sendParentMessageToAdvisor = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 const getMessagesFromParent = async (req, res) => {
   try {
