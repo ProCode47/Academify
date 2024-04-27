@@ -463,3 +463,150 @@ Fetches messages from a parent.
 - **Example Response:** Array of message objects
 
 ---
+
+## Parent Routes (All requests should contain the token in the auth header)
+
+### Get Parent Information
+
+Retrieves information about a Parent.
+
+- **URL:** `/parent/profile`
+- **Method:** `GET`
+- **Description:** Get Parent information.
+- **Example Response:**
+  ```json
+  {
+    "profile": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "johndoe@gmail.com",
+    },
+    "children": [
+      {
+        "_id": "6152f8a91b6cf4a2443d2e4d",
+        "firstName": "John",
+        "lastName": "Doe",
+        "reg": "20230001",
+        "advisor": "6152f8a91b6cf4a2443d2e4c"
+      },
+      {
+        "_id": "6152f8a91b6cf4a2443d2e4d",
+        "firstName": "John",
+        "lastName": "Doe",
+        "reg": "20230001",
+        "advisor": "6152f8a91b6cf4a2443d2e4c"
+      }
+    ]
+  }
+  ```
+---
+
+### Get Child Result
+
+**URL:** `/parent/getChildResult`
+
+**Method:** `GET`
+
+**Description:** Fetches the result for a specific student under a parent.
+
+- **Request Body:**
+  - `reg` (string): Reg No of the student.
+  - `semesterName` (string): The Semester Name : Harmattan / Rain.
+  - `session` (string): The session eg: 2022/2023.
+- **Example Request:**
+  ```json
+  {
+    "reg": "12345566",
+    "semesterName": "Harmattan",
+    "session": "2022/2023"
+  }
+  ```
+
+**Response:**
+
+```json
+{
+  "results": [
+    {
+      "_id": "6115d593b8bbcd001bf18b80",
+      "student": "1234567890",
+      "course": {
+        "_id": "6115d591b8bbcd001bf18b7f",
+        "code": "MTH101",
+        "name": "Mathematics",
+        "level": 100
+      },
+      "grade": "A",
+      "semester": "6115d591b8bbcd001bf18b7e",
+      "createdAt": "2022-08-12T09:32:19.734Z",
+      "updatedAt": "2022-08-12T09:32:19.734Z",
+      "__v": 0
+    },
+    {
+      "_id": "6115d593b8bbcd001bf18b81",
+      "student": "1234567890",
+      "course": {
+        "_id": "6115d591b8bbcd001bf18b7d",
+        "code": "PHY101",
+        "name": "Physics",
+        "level": 100
+      },
+      "grade": "B",
+      "semester": "6115d591b8bbcd001bf18b7e",
+      "createdAt": "2022-08-12T09:32:19.734Z",
+      "updatedAt": "2022-08-12T09:32:19.734Z",
+      "__v": 0
+    }
+  ]
+}
+```
+---
+
+#### Edit Parent Profile/ Password
+
+Edit the parent's Profile.
+
+- **URL:** `/parent/editProfile`
+- **Method:** `POST`
+- **Description:** Saves the editted parent profile.
+- **Request Body:**
+  - `firstName` (string): First Name of the parent.
+  - `lastName` (string): last Name of the parent.
+  - `password` (string): password to be changed.
+- **Example Request:**
+  ```json
+  {
+    "firstName": "John",
+    "lastName": "John",
+    "password": "password"
+  }
+  ```
+- **Example Response:**
+  ```json
+  {
+    "message": "Profile updated successfully",
+    "token": "eyJhbGciOiJIUzI1NiIsIn..."
+  }
+  ```
+
+Add child to the parent using reg no.
+
+- **URL:** `/parent/addChild`
+- **Method:** `POST`
+- **Description:** Adds a child under a parent.
+- **Request Body:**
+  - `reg` (string): Reg No of the child.
+- **Example Request:**
+  ```json
+  {
+    "reg": "122345656"
+  }
+  ```
+- **Example Response:**
+  ```json
+  {
+    "message": "Child Added Successfully"
+  }
+  ```
+
+

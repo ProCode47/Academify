@@ -24,7 +24,6 @@ router.post('/login/courseadvisor', authController.loginCourseAdvisor);
 router.get('/student/:regNo', studentController.getStudentByRegNo);
 router.get('/student/result/:studentId', resultController.getStudentResult);
 
-
 // Courses routes
 router.get('/course/load', courseController.loadCourses);
 router.post('/course/register', courseController.registerCourses);
@@ -51,6 +50,9 @@ router.get('/advisors/get-all', courseAdvisorController.getAllCourseAdvisors);
 router.post('/upload-results', authenticate, resultController.uploadResults);
 
 //Parent routes
-router.get('/profile/parent', parentController.getProfile);
+router.get('/parent/profile',authenticate, parentController.getProfile);
+router.post('/parent/editProfile',authenticate, parentController.editProfile)
+router.post('/parent/addChild',authenticate, parentController.addChild)
+router.get('/parent/getChildResult',authenticate, parentController.getChildResult)
 
 module.exports = router;
