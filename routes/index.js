@@ -40,14 +40,14 @@ router.post('/api/messages/parent/advisor/:parentId/:advisorId', messageControll
 router.get('/api/messages/parent/:parentId', messageController.getMessagesFromParent);
 
 // Profile Routes for course advisor
-router.get('/profile', courseAdvisorController.getProfile);
-router.put('/update-password', authenticate, courseAdvisorController.updatePassword);
+router.get('/profile/advisors', courseAdvisorController.getProfile);
+router.put('/advisors/update-password', authenticate, courseAdvisorController.updatePassword);
 
 // Route to get all course advisors
 router.get('/advisors/get-all', courseAdvisorController.getAllCourseAdvisors);
 
-// Route to upload results (requires authentication)
-router.post('/upload-results', authenticate, resultController.uploadResults);
+// Route to upload results 
+router.post('/advisors/upload-results', authenticate, resultController.uploadResults);
 
 //Parent routes
 router.get('/parent/profile',authenticate, parentController.getProfile);
