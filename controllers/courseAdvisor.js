@@ -4,6 +4,7 @@ const authController = require('../controllers/auth');
 // Controller function to get the profile information of the course adviser
 async function getProfile(req, res) {
   try {
+    console.log(user)
     const userId = req.user.id;
 
     // Find the course advisor record associated with the user ID

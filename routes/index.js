@@ -40,7 +40,7 @@ router.post('/api/messages/parent/advisor/:parentId/:advisorId', messageControll
 router.get('/api/messages/parent/:parentId', messageController.getMessagesFromParent);
 
 // Profile Routes for course advisor
-router.get('/profile/advisors', courseAdvisorController.getProfile);
+router.get('/profile/advisors', authenticate, courseAdvisorController.getProfile);
 router.put('/advisors/update-password', authenticate, courseAdvisorController.updatePassword);
 
 // Route to get all course advisors
