@@ -22,10 +22,13 @@ async function uploadResults(req, res) {
 // Fetch student result controller
 async function getStudentResult (req, res) {
   try {
-    const { studentId } = req.params;
+    const userID = req.user._id;
+
+    // Find student by registration number
+    const student = await Student.findOne({ user: userID });
 
     // Find results for the student
-    const results = await Result.find({ student: studentId }).populate('course');
+    const results = await Result.find({ student: student._id }).populate('course');
 
     if (!results) {
       return res.status(404).json({ message: "No results found for the student" });
