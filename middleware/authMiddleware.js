@@ -1,15 +1,22 @@
-const jwt = require('jsonwebtoken');
-const { User } = require('../models/index');
+const jwt = require("jsonwebtoken");
+const { User } = require("../models/index");
+const config = require('../config/config')
 
-const JWT_SECRET = 'your_secret_key';
+
+const JWT_SECRET =  config.secretKey
 
 // Middleware function to authenticate users
 async function authenticate(req, res, next) {
   // Extract the JWT token from the request headers
-  const token = req.headers.authorization;
+  const authorizationHeader = req.headers.authorization;
+  // Extract the token without the "Bearer" prefix
+  const [prefix, token] = authorizationHeader.split(" ");
+  console.log(token);
 
   if (!token) {
-    return res.status(401).json({ message: 'Authorization token not provided' });
+    return res
+      .status(401)
+      .json({ message: "Authorization token not provided" });
   }
 
   try {
@@ -23,15 +30,16 @@ async function authenticate(req, res, next) {
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(401).json({ message: 'User not found' });
+      return res.status(401).json({ message: "User not found" });
     }
 
     // Attach the user object to the request for further handling
+    console.log({user})
     req.user = user;
     next();
   } catch (error) {
     console.error("Error authenticating user:", error);
-    return res.status(401).json({ message: 'Invalid token' });
+    return res.status(401).json({ message: "Invalid token" });
   }
 }
 

@@ -1,0 +1,11 @@
+POST http://localhost:5000/login/courseadvisor HTTP/1.1
+content-type: application/json
+
+{
+    "email": "chisomudonsi.aeworks@gmail.com",
+    "password":"1234567890"
+}
+
+###
+GET http://localhost:5000/profile/advisors HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjM5YTcxMzY2Njc1YTAwNDRhOGEyODUiLCJlbWFpbCI6ImNoaXNvbXVkb25zaS5hZXdvcmtzQGdtYWlsLmNvbSIsImlhdCI6MTcxNTE3NDI2NSwiZXhwIjoxNzE1MTc3ODY1fQ.BJs3OXnf0viMx7m1Vq_Qaj7q5f0ACuBuNUfIYVnNFA0

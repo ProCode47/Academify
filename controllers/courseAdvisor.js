@@ -1,14 +1,16 @@
-const CourseAdvisor = require('../models/index');
 const authController = require('../controllers/auth');
+const { CourseAdvisor } = require('../models');
 
 // Controller function to get the profile information of the course adviser
 async function getProfile(req, res) {
   try {
-    console.log(user)
-    const userId = req.user.id;
+    const userId = req.user._id;
+    console.log("damn")
+    console.log(req.user)
+
 
     // Find the course advisor record associated with the user ID
-    const courseAdvisor = await CourseAdvisor.findOne({ user: userId });
+    const courseAdvisor = await CourseAdvisor.findOne({ user: req.user._id });
 
     if (!courseAdvisor) {
       return res.status(404).json({ message: "Course adviser not found" });
@@ -23,10 +25,7 @@ async function getProfile(req, res) {
      // Add more fields as needed
    };
 
-   // Generate token for the user
-   const token = authController.generateToken(req.user);
-
-   return res.json({ profile, token });
+   return res.json({ profile});
   } catch (error) {
     console.error("Error fetching course adviser profile:", error);
     return res.status(500).json({ message: "Internal server error" });
