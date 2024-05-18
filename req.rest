@@ -9,3 +9,33 @@ content-type: application/json
 ###
 GET http://localhost:5000/profile/advisors HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjM5YTcxMzY2Njc1YTAwNDRhOGEyODUiLCJlbWFpbCI6ImNoaXNvbXVkb25zaS5hZXdvcmtzQGdtYWlsLmNvbSIsImlhdCI6MTcxNTE3NDI2NSwiZXhwIjoxNzE1MTc3ODY1fQ.BJs3OXnf0viMx7m1Vq_Qaj7q5f0ACuBuNUfIYVnNFA0
+
+###
+POST  http://localhost:5000/register/parent HTTP/1.1
+content-type: application/json
+
+{
+    "firstName": "grant",
+    "lastName": "eke",
+    "email": "ekegrant@gmail.com",
+    "password": "1234567890"
+}
+
+###
+GET http://localhost:5000/parent/profile HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjQ4ZTg3YjMxZTAwZDkzYWM4Y2Y3MWQiLCJlbWFpbCI6ImVrZWdyYW50QGdtYWlsLmNvbSIsImlhdCI6MTcxNjA1NDEzOSwiZXhwIjoxNzE2MDU3NzM5fQ.jN9Da7hM2DTbywbTPoEiK0mTytXISK3w-R20MxXD5ZY
+
+###
+POST  http://localhost:5000/parent/editProfile HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjQ4ZTg3YjMxZTAwZDkzYWM4Y2Y3MWQiLCJlbWFpbCI6ImVrZWdyYW50QGdtYWlsLmNvbSIsImlhdCI6MTcxNjA1NDEzOSwiZXhwIjoxNzE2MDU3NzM5fQ.jN9Da7hM2DTbywbTPoEiK0mTytXISK3w-R20MxXD5ZY
+
+{
+    "firstName": "grant",
+    "lastName": "eke",
+    "password": "1234567890"
+}
+
+
+
+

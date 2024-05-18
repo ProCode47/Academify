@@ -127,4 +127,5 @@ module.exports = {
   loginStudent: async (req, res) => loginUser(req, res, "student"),
   loginParent: async (req, res) => loginUser(req, res, "parent"),
   loginCourseAdvisor: async (req, res) => loginUser(req, res, "course_advisor"),
+  generateToken
 };

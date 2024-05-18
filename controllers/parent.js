@@ -1,5 +1,6 @@
 const { User, Student, Parent, Course, Result, Semester, Comment, Notification } = require('../models')
 const authController = require('../controllers/auth');
+const bcrypt = require("bcrypt");
 
 //Get Parent's Profile Details
 const getProfile = async (req, res) => {
@@ -33,9 +34,13 @@ const getProfile = async (req, res) => {
             // Add more fields as needed
         };
 
-        const [...children] = parent.child
+        const children = parent.children
 
-        res.status(200).json({profile, children})
+        if (children){
+            res.status(200).json({profile, children})
+        }
+
+        res.status(200).json({profile})
 
     } catch (error){
         console.error(error);
@@ -51,10 +56,14 @@ const editProfile = async (req, res) => {
         const {firstName, lastName, password} = req.body
 
         // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        let hashedPassword
+        if(password){
+            hashedPassword = await bcrypt.hash(password, 10);
+        }
 
         //Find parent by id
         const parent = await User.findOne(filter)
+        
 
         if (!parent) {
             return res.status(404).json({ message: 'Parent not found' });
