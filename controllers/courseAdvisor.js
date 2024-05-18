@@ -63,10 +63,10 @@ async function updatePassword(req, res) {
   }
 }
 
-async function getAllCourseAdvisors (req, res) {
+async function getAllCourseAdvisors(req, res) {
   try {
-    // Fetch all course advisors
-    const courseAdvisors = await CourseAdvisor.find();
+    // Fetch all course advisors and populate the user field
+    const courseAdvisors = await CourseAdvisor.find().populate('user');
     res.status(200).json(courseAdvisors);
   } catch (error) {
     console.error(error);
