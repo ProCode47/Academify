@@ -1,5 +1,6 @@
+const { CourseAdvisor, User } = require('../models');
 const authController = require('../controllers/auth');
-const { CourseAdvisor } = require('../models');
+const bcrypt = require('bcrypt');
 
 // Controller function to get the profile information of the course adviser
 async function getProfile(req, res) {
@@ -10,7 +11,7 @@ async function getProfile(req, res) {
 
 
     // Find the course advisor record associated with the user ID
-    const courseAdvisor = await CourseAdvisor.findOne({ user: req.user._id });
+    const courseAdvisor = await CourseAdvisor.findOne({ user: userId }).populate('user');
 
     if (!courseAdvisor) {
       return res.status(404).json({ message: "Course adviser not found" });
@@ -18,20 +19,22 @@ async function getProfile(req, res) {
 
     // Return the profile information of the course advisor
     const profile = {
-     name: `${req.user.firstName} ${req.user.lastName}`,
-     email: req.user.email,
-     photo: courseAdvisor.photo,
-     level: courseAdvisor.level,
-     // Add more fields as needed
-   };
+      name: `${courseAdvisor.user.firstName} ${courseAdvisor.user.lastName}`,
+      email: courseAdvisor.user.email,
+      photo: courseAdvisor.photo,
+      level: courseAdvisor.level,
+      // Add more fields as needed
+    };
 
-   return res.json({ profile});
+    // Generate token for the user
+    const token = authController.generateToken(courseAdvisor.user);
+
+    return res.json({ profile, token });
   } catch (error) {
     console.error("Error fetching course adviser profile:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 }
-
 
 // Controller function to update the course advisor's password
 async function updatePassword(req, res) {
@@ -42,19 +45,21 @@ async function updatePassword(req, res) {
     const { newPassword } = req.body;
 
     // Find the course advisor record associated with the user ID
-    let courseAdvisor = await CourseAdvisor.findOne({ user: userId });
+    const user = await User.findById(userId);
 
-    if (!courseAdvisor) {
-      return res.status(404).json({ message: "Course adviser not found" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    // Update the password field of the course advisor record
-    courseAdvisor.password = newPassword;
-    await courseAdvisor.save();
+    // Hash the new password before saving
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the password field of the user record
+    user.password = hashedPassword;
+    await user.save();
 
     // Generate token for the updated user
-    const updatedUser = await User.findById(userId);
-    const token = authController.generateToken(updatedUser);
+    const token = authController.generateToken(user);
 
     return res.json({ message: "Password updated successfully", token });
   } catch (error) {
@@ -65,15 +70,13 @@ async function updatePassword(req, res) {
 
 async function getAllCourseAdvisors(req, res) {
   try {
-    // Fetch all course advisors and populate the user field
     const courseAdvisors = await CourseAdvisor.find().populate('user');
     res.status(200).json(courseAdvisors);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error('Error in getAllCourseAdvisors:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
-
 
 module.exports = {
   getProfile,
