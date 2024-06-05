@@ -14,10 +14,9 @@ const getStudentByRegNo = async (req, res) => {
     }
 
     // Extract user details from populated data
-    const { firstName, lastName, email } = student.user;
     console.log({ student });
     console.log(student.courses);
-    res.status(200).json({ firstName, lastName, email });
+    res.status(200).json({ student });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });

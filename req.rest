@@ -1,14 +1,36 @@
+GET http://localhost:5000/courses/100/rain HTTP/1.1
+
+###
+GET http://localhost:5000/student/profile HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjVhM2Y5ZTI5MzcyNjAwNDM3ZTU0NzkiLCJlbWFpbCI6InlvQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE3NTc0MzYwLCJleHAiOjE3MTc1Nzc5NjB9.KS6RNiKAcWslB9sTxxAGmvQGCVdT3IeDut5sVPRPxvY
+
+
+###
+
 POST http://localhost:5000/login/courseadvisor HTTP/1.1
 content-type: application/json
 
 {
-    "email": "chisomudonsi.aeworks@gmail.com",
+    "email": "aeworks@gmail.com",
     "password":"1234567890"
 }
 
 ###
-GET http://localhost:5000/profile/advisors HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjM5YTcxMzY2Njc1YTAwNDRhOGEyODUiLCJlbWFpbCI6ImNoaXNvbXVkb25zaS5hZXdvcmtzQGdtYWlsLmNvbSIsImlhdCI6MTcxNTE3NDI2NSwiZXhwIjoxNzE1MTc3ODY1fQ.BJs3OXnf0viMx7m1Vq_Qaj7q5f0ACuBuNUfIYVnNFA0
+POST https://academify-f0qd.onrender.com/register/student HTTP/1.1
+content-type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "yo@example.com",
+  "password": "password123",
+  "reg": "20230001",
+  "advisor": "6639a71366675a0044a8a287"
+}
+
+
+###
+GET https://academify-f0qd.onrender.com/advisors/get-all HTTP/1.1
 
 ###
 POST  http://localhost:5000/register/parent HTTP/1.1
@@ -22,19 +44,20 @@ content-type: application/json
 }
 
 ###
+POST  http://localhost:5000/login/student HTTP/1.1
+content-type: application/json
+
+{
+      "email": "yo@example.com",
+  "password": "password123"
+}
+
+
+###
 GET http://localhost:5000/parent/profile HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjQ4ZTg3YjMxZTAwZDkzYWM4Y2Y3MWQiLCJlbWFpbCI6ImVrZWdyYW50QGdtYWlsLmNvbSIsImlhdCI6MTcxNjA1NDEzOSwiZXhwIjoxNzE2MDU3NzM5fQ.jN9Da7hM2DTbywbTPoEiK0mTytXISK3w-R20MxXD5ZY
 
 ###
-POST  http://localhost:5000/parent/editProfile HTTP/1.1
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjQ4ZTg3YjMxZTAwZDkzYWM4Y2Y3MWQiLCJlbWFpbCI6ImVrZWdyYW50QGdtYWlsLmNvbSIsImlhdCI6MTcxNjA1NDEzOSwiZXhwIjoxNzE2MDU3NzM5fQ.jN9Da7hM2DTbywbTPoEiK0mTytXISK3w-R20MxXD5ZY
-
-{
-    "firstName": "grant",
-    "lastName": "eke",
-    "password": "1234567890"
-}
 
 
 
