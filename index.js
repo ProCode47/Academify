@@ -5,20 +5,19 @@ const config = require("./config/config");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 5000;
+const morgan = require("morgan")
 
 //Configuring Express
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"))
 
 //Configure MongoDB Database
 const connectionString = config.URI;
 mongoose
-  .connect(connectionString, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(connectionString)
   .then((response) => {
     console.log("MongoDB Database Running Successfully");
   })

@@ -11,7 +11,7 @@ POST http://localhost:5000/login/courseadvisor HTTP/1.1
 content-type: application/json
 
 {
-    "email": "aeworks@gmail.com",
+    "email": "coolstuff@gmail.com",
     "password":"1234567890"
 }
 
@@ -44,11 +44,22 @@ content-type: application/json
 }
 
 ###
+POST  http://localhost:5000/register/courseadvisor HTTP/1.1
+content-type: application/json
+
+{
+    "firstName": "grant",
+    "lastName": "eke",
+    "email": "coolstuff@gmail.com",
+    "password": "1234567890"
+}
+
+###
 POST  http://localhost:5000/login/student HTTP/1.1
 content-type: application/json
 
 {
-      "email": "yo@example.com",
+  "email": "yo@example.com",
   "password": "password123"
 }
 
