@@ -1,5 +1,5 @@
-const Result = require('../models/index');
-const authController = require('./auth');
+const { Student, Result } = require("../models");
+const authController = require("./auth");
 
 // Controller function to upload results
 async function uploadResults(req, res) {
@@ -13,14 +13,16 @@ async function uploadResults(req, res) {
     // Generate token for the user (course advisor)
     const token = authController.generateToken(req.user);
 
-    return res.status(201).json({ message: 'Results uploaded successfully', token });
+    return res
+      .status(201)
+      .json({ message: "Results uploaded successfully", token });
   } catch (error) {
-    console.error('Error uploading results:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    console.error("Error uploading results:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 // Fetch student result controller
-async function getStudentResult (req, res) {
+async function getStudentResult(req, res) {
   try {
     const userID = req.user._id;
 
@@ -28,10 +30,14 @@ async function getStudentResult (req, res) {
     const student = await Student.findOne({ user: userID });
 
     // Find results for the student
-    const results = await Result.find({ student: student._id }).populate('course');
+    const results = await Result.find({ student: student._id }).populate(
+      "course"
+    );
 
     if (!results) {
-      return res.status(404).json({ message: "No results found for the student" });
+      return res
+        .status(404)
+        .json({ message: "No results found for the student" });
     }
 
     res.status(200).json({ results });
@@ -39,9 +45,9 @@ async function getStudentResult (req, res) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
-};
+}
 
 module.exports = {
   uploadResults,
-  getStudentResult
+  getStudentResult,
 };
