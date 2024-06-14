@@ -62,7 +62,7 @@ router.get('/advisors/view-results', authenticate, resultController.viewResults)
 router.post('/advisors/semesters', authenticate, semesterController.createSemester);
 
 // Route to get a semester by session and name
-router.get('/advisors/semesters', authenticate, semesterController.getSemester);
+router.get('/advisors/semesters', authenticate, semesterController.getSemesters);
 
 //Parent routes
 router.get('/profile/parent', parentController.getProfile);
