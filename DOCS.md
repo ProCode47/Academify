@@ -740,6 +740,9 @@ This controller function handles the uploading of results to the database. It ex
 
 #### Request Body
 
+- `academicYear` (string): The academic year for the results being uploaded.
+- `semester` (string): The semester for the results being uploaded.
+- `course` (string): The course for which the results are being uploaded.
 - `results` (array of objects): An array of result objects to be uploaded to the database.
 
 
@@ -747,6 +750,9 @@ This controller function handles the uploading of results to the database. It ex
 
 - **201 Created:** Results were successfully uploaded to the database.
   - **Content:** JSON object containing a success message and an authentication token.
+
+- **400 Bad Request:** Missing required parameters in the request body.
+  - **Content:** JSON object containing an error message.
 - **500 Internal Server Error:** An error occurred while processing the request on the server side.
 
 #### Example Response
