@@ -16,8 +16,8 @@ async function uploadResults(req, res) {
     // Process each result to include academic year, semester, and course
     const processedResults = results.map(result => ({
       ...result,
-      semester: mongoose.Types.ObjectId(semester), // Convert to ObjectId
-      course: mongoose.Types.ObjectId(course), // Convert to ObjectId
+      semester: semester, // Convert to ObjectId
+      course: course, // Convert to ObjectId
     }));
 
     // Save the processed results to the database
