@@ -163,20 +163,6 @@ const semesterSchema = new Schema({
 }, { timestamps: true });
 
 // Define Notification schema
-const notificationSchema = new Schema({
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true},
-    notification: [
-        { 
-            message: {type: String, required: true },
-            status: { type: String, enum: ['read', 'unread'], required: true }
-        }
-    ]
-    // Add other semester fields if needed
-  },
-  { timestamps: true }
-);
-
-// Define Notification schema
 const notificationSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
