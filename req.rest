@@ -2,7 +2,7 @@ GET http://localhost:5000/courses/100/rain HTTP/1.1
 
 ###
 GET http://localhost:5000/student/profile HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjVhM2Y5ZTI5MzcyNjAwNDM3ZTU0NzkiLCJlbWFpbCI6InlvQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE3NTc0MzYwLCJleHAiOjE3MTc1Nzc5NjB9.KS6RNiKAcWslB9sTxxAGmvQGCVdT3IeDut5sVPRPxvY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjVhM2Y5ZTI5MzcyNjAwNDM3ZTU0NzkiLCJlbWFpbCI6InlvQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE4MzY5OTc3LCJleHAiOjE3MTgzNzM1Nzd9.gxMpRc2e9-zgfixso12fBKQFvmN3xhKAvDfUfkWRiVE
 
 
 ###

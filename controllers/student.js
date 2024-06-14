@@ -7,8 +7,14 @@ const getStudentByRegNo = async (req, res) => {
     // Find student by userID
     const reg = await Student.findOne({ user: userID }).select("reg");
     const student = await Student.findOne({ reg: reg.reg })
-      .populate("user")
-      .populate("courses");
+      .populate({
+        path: "sessions.harmattan",
+        model: "Course",
+      })
+      .populate({
+        path: "sessions.rain",
+        model: "Course",
+      });
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }

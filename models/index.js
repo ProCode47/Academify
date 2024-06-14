@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+// sessions schema
+const sessionSchema = new Schema({
+  session: { type: String, required: true },
+  harmattan: [{ type: Schema.Types.ObjectId, ref: "Course" }],
+  rain: [{ type: Schema.Types.ObjectId, ref: "Course" }],
+});
 // Define User schema (common for all roles)
 const userSchema = new Schema(
   {
@@ -22,7 +28,7 @@ const studentSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     reg: { type: String, required: true },
-    courses: [{ type: Schema.Types.ObjectId, ref: "Course" }], // Array to store registered courses
+    sessions: [{ type: sessionSchema, required: false }],
     courseAdvisor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "CourseAdvisor",
@@ -155,12 +161,15 @@ const resultSchema = new Schema(
 );
 
 // Define Semester schema
-const semesterSchema = new Schema({
-    name: { type: String, enum: ['Harmattan', 'Rain'], required: true },
-    session: {type: String, required: true},
-    courses: [{ type: Schema.Types.ObjectId, ref: "Course" }]
+const semesterSchema = new Schema(
+  {
+    name: { type: String, enum: ["Harmattan", "Rain"], required: true },
+    session: { type: String, required: true },
+    courses: [{ type: Schema.Types.ObjectId, ref: "Course" }],
     // Add other semester fields if needed
-}, { timestamps: true });
+  },
+  { timestamps: true }
+);
 
 // Define Notification schema
 const notificationSchema = new Schema(

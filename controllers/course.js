@@ -25,11 +25,15 @@ const loadCourses = async (req, res) => {
 };
 const registerCourses = async (req, res) => {
   try {
-    const { reg, courseCodes } = req.body;
+    const { reg, session: sessionName, semester, courseCodes } = req.body;
+
+    // Validate semester value
+    if (!["rain", "harmattan"].includes(semester)) {
+      return res.status(400).json({ message: "Invalid semester" });
+    }
 
     // Find student by registration number
     const student = await Student.findOne({ reg });
-    console.log(student.courses)
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
@@ -40,9 +44,20 @@ const registerCourses = async (req, res) => {
       return res.status(400).json({ message: "Some courses not found" });
     }
 
-    // Filter out courses that the student has already registered
+    // Find or create session for the student
+    let session = student.sessions.find(s => s.session === sessionName);
+    if (!session) {
+      session = {
+        session: sessionName,
+        harmattan: [],
+        rain: []
+      };
+      student.sessions.push(session);
+    }
+
+    // Filter out courses that are already registered in the specified semester
     const newCourses = coursesToAdd.filter(
-      (course) => !student.courses.includes(course._id)
+      course => !session[semester].includes(course._id)
     );
 
     // Check if all requested courses are duplicates
@@ -52,14 +67,14 @@ const registerCourses = async (req, res) => {
         .json({ message: "All requested courses are already registered" });
     }
 
-    // Add only new courses to student's course list
-    student.courses = [...student.courses, ...newCourses.map(course => course._id)];
+    // Add only new courses to the specified semester
+    session[semester] = [...session[semester], ...newCourses.map(course => course._id)];
 
     // Save the updated student document
     await student.save();
 
     // Log the updated student document for debugging
-    console.log('Updated student courses:', student.courses);
+    console.log(`Updated student ${semester} courses for session ${sessionName}:`, session[semester]);
 
     res.status(200).json({ message: "Courses registered successfully" });
   } catch (error) {
@@ -67,6 +82,7 @@ const registerCourses = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 
 const getCoursesByLevelAndSemester = (req, res) => {
