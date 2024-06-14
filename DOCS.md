@@ -349,11 +349,15 @@ Registers courses for a student.
 - **Request Body:**
   - `reg` (string): The registration number of the student.
   - `courseCodes` (array of strings): An array of course codes to register.
+  - `session`: session to register student courses.
+  - `semester`: sememster to register student courses.
 - **Example Request:**
 
   ```json
   {
     "reg": "20230001",
+  "session": "2021/2022",
+  "semester":"rain", 
     "courseCodes": ["MTH 101","PHY 101", "CHM 101"]
   }
   ```
