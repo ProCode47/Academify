@@ -1,4 +1,4 @@
-const { Student, User } = require("../models");
+const { Student } = require("../models");
 
 const getStudentByRegNo = async (req, res) => {
   try {
@@ -6,7 +6,6 @@ const getStudentByRegNo = async (req, res) => {
 
     // Find student by userID
     const reg = await Student.findOne({ user: userID }).select("reg");
-    console.log(reg);
     const student = await Student.findOne({ reg: reg.reg })
       .populate("user")
       .populate("courses");

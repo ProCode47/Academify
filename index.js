@@ -6,9 +6,11 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 5000;
 const morgan = require("morgan")
+const corsOptions = { origin: '*', optionsSuccessStatus: 200 };
+
 
 //Configuring Express
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
