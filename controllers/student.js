@@ -14,7 +14,8 @@ const getStudentByRegNo = async (req, res) => {
       .populate({
         path: "sessions.rain",
         model: "Course",
-      });
+      })
+      .populate("user");
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
