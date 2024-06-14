@@ -154,7 +154,6 @@ const courseSchema = new Schema(
 // Define Result schema
 const resultSchema = new Schema(
   {
-    student: { type: Schema.Types.ObjectId, ref: "Student", required: true },
     course: { type: Schema.Types.ObjectId, ref: "Course", required: true },
     grade: { type: String, required: false },
     semester: { type: Schema.Types.ObjectId, ref: "Semester", required: true },
