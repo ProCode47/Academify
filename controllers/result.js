@@ -6,17 +6,16 @@ const authController = require('./auth');
 async function uploadResults(req, res) {
   try {
     // Extract the academic year, semester, course, and results from the request body
-    const { academicYear, semester, course, results } = req.body;
+    const {semester, course, results } = req.body;
 
     // Check if the necessary parameters are provided
-    if (!academicYear || !semester || !course || !results) {
+    if (!semester || !course || !results) {
       return res.status(400).json({ message: 'Missing required parameters' });
     }
 
     // Process each result to include academic year, semester, and course
     const processedResults = results.map(result => ({
       ...result,
-      session: academicYear,
       semester: mongoose.Types.ObjectId(semester), // Convert to ObjectId
       course: mongoose.Types.ObjectId(course), // Convert to ObjectId
     }));
