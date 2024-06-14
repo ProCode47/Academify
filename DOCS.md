@@ -580,6 +580,25 @@ Fetches all course advisors from the database.
 ]
 ```
 
+---
+
+### `updateProfile`
+
+#### Description
+
+Updates the profile information of the authenticated course advisor.
+
+- **URL:** `/advisors/update-profile`
+- **Method:** `PUT`
+- **Auth Required:** Yes
+- **Permissions Required:** None
+
+#### Request Body
+- `firstName` (string): The new first name.
+- `lastName` (string): The new last name.
+- `email` (string): The new email address.
+- `level` (string): The new level.
+
 ### Upload Results
 
 #### Description

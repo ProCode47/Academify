@@ -65,6 +65,43 @@ async function updatePassword(req, res) {
   }
 }
 
+// Controller function to update the course advisor's profile
+async function updateProfile(req, res) {
+  try {
+    const userId = req.user.id;
+    const { firstName, lastName, email, level } = req.body;
+
+    // Find the course advisor by user ID
+    let courseAdvisor = await CourseAdvisor.findOne({ user: userId });
+
+    if (!courseAdvisor) {
+      return res.status(404).json({ message: "Course advisor not found" });
+    }
+
+    // Update the course advisor's profile fields
+    if (firstName) courseAdvisor.user.firstName = firstName;
+    if (lastName) courseAdvisor.user.lastName = lastName;
+    if (email) courseAdvisor.user.email = email;
+
+    // Save the updated user profile
+    await courseAdvisor.user.save();
+
+    // Update the course advisor's specific fields
+    if (level) courseAdvisor.level = level;
+
+    // Save the updated course advisor profile
+    await courseAdvisor.save();
+
+    return res.status(200).json({ 
+      message: "Profile updated successfully", 
+      courseAdvisor 
+    });
+  } catch (error) {
+    console.error("Error updating course advisor profile:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 async function getAllCourseAdvisors(req, res) {
   try {
     const courseAdvisors = await CourseAdvisor.find().populate('user');
@@ -78,7 +115,7 @@ async function getAllCourseAdvisors(req, res) {
 // Function to get all students under the authenticated course advisor
 async function getAllStudentsUnderCourseAdvisor(req, res) {
   try {
-    const userId = req.user._id;
+    const userId = req.user.id;
 
     // Find the course advisor record associated with the user ID
     const courseAdvisor = await CourseAdvisor.findOne({ user: userId });
@@ -101,5 +138,6 @@ module.exports = {
   getProfile,
   updatePassword,
   getAllCourseAdvisors,
-  getAllStudentsUnderCourseAdvisor
+  getAllStudentsUnderCourseAdvisor,
+  updateProfile
 };

@@ -43,6 +43,7 @@ router.get('/api/messages/parent/:parentId', messageController.getMessagesFromPa
 // Profile Routes for course advisor
 router.get('/profile/advisors', courseAdvisorController.getProfile);
 router.put('/advisors/update-password', authenticate, courseAdvisorController.updatePassword);
+router.put('/advisors/update', authenticate, courseAdvisorController.updateProfile);
 
 // Route to get all course advisors
 router.get('/advisors/get-all', courseAdvisorController.getAllCourseAdvisors);
@@ -52,6 +53,9 @@ router.get('/advisors/students', authenticate, courseAdvisorController.getAllStu
 
 // Route to upload results 
 router.post('/advisors/upload-results', authenticate, resultController.uploadResults);
+
+// Route to view results
+router.get('/advisors/view-results', authenticate, resultController.viewResults);
 
 //Parent routes
 router.get('/profile/parent', parentController.getProfile);

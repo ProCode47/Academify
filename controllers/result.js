@@ -33,6 +33,27 @@ async function uploadResults(req, res) {
   }
 }
 
+// Controller function to view previously uploaded results
+async function viewResults(req, res) {
+  try {
+      // Extract query parameters
+      const { academicYear, semester, course } = req.query;
+
+      // Check if the necessary parameters are provided
+      if (!academicYear || !semester || !course) {
+          return res.status(400).json({ message: 'Missing required query parameters' });
+      }
+
+      // Find results based on query parameters
+      const results = await Result.find({ academicYear, semester, course });
+
+      return res.status(200).json(results);
+  } catch (error) {
+      console.error('Error retrieving results:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
 // Fetch student result controller
 async function getStudentResult (req, res) {
   try {
@@ -54,5 +75,6 @@ async function getStudentResult (req, res) {
 
 module.exports = {
   uploadResults,
-  getStudentResult
+  getStudentResult,
+  viewResults
 };
