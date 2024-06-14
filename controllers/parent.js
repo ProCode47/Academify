@@ -132,7 +132,9 @@ const addChild = async (req,res) =>{
         const parentID = req.user._id;
 
         //Find parent by id
-        const parent = await User.findById(parentID)
+        const parent = await Parent.findOne({user: parentID})
+
+        let children = parent.children
 
         if (!parent) {
             return res.status(404).json({ message: 'Parent not found' });
@@ -142,11 +144,18 @@ const addChild = async (req,res) =>{
         const filter = {reg: regNo}
 
         const student = await Student.findOne(filter)
+        
 
         if (!student){
             return res.status(404).json({ message: 'Student not found' });
         }
-         
+
+        const studentFound = children.includes(student._id);
+
+        if (studentFound){
+            return res.status(404).json({ message: 'Child already added' });
+        }
+
         Parent.findOneAndUpdate({user : parentID}, {$push: {children: student._id}}, {new: true}, (err)=>{
             if(err){
                 console.error(err);
