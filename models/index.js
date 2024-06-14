@@ -155,10 +155,22 @@ const resultSchema = new Schema(
 );
 
 // Define Semester schema
-const semesterSchema = new Schema(
-  {
-    name: { type: String, enum: ["Harmattan", "Rain"], required: true },
-    session: { type: String, required: true },
+const semesterSchema = new Schema({
+    name: { type: String, enum: ['Harmattan', 'Rain'], required: true },
+    session: {type: String, required: true},
+    courses: [{ type: Schema.Types.ObjectId, ref: "Course" }]
+    // Add other semester fields if needed
+}, { timestamps: true });
+
+// Define Notification schema
+const notificationSchema = new Schema({
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true},
+    notification: [
+        { 
+            message: {type: String, required: true },
+            status: { type: String, enum: ['read', 'unread'], required: true }
+        }
+    ]
     // Add other semester fields if needed
   },
   { timestamps: true }
