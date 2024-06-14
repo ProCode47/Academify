@@ -69,42 +69,44 @@ async function updatePassword(req, res) {
 }
 
 // Controller function to update the course advisor's profile
-async function updateProfile(req, res) {
+async function updateProfile (req, res) {
   try {
-    const userId = req.user.id;
     const { firstName, lastName, email, level } = req.body;
+    const userId = req.user._id
 
-    // Find the course advisor by user ID
-    let courseAdvisor = await CourseAdvisor.findOne({ user: userId });
-
-    if (!courseAdvisor) {
-      return res.status(404).json({ message: "Course advisor not found" });
+    // Validate the request body
+    if (!userId || !firstName || !lastName || !email || !level) {
+      return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // Update the course advisor's profile fields
-    if (firstName) courseAdvisor.user.firstName = firstName;
-    if (lastName) courseAdvisor.user.lastName = lastName;
-    if (email) courseAdvisor.user.email = email;
+    // Update User details
+    const updatedUser = await User.findByIdAndUpdate(userId, {
+      firstName,
+      lastName,
+      email,
+    }, { new: true });
 
-    // Save the updated user profile
-    await courseAdvisor.user.save();
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    // Update the course advisor's specific fields
-    if (level) courseAdvisor.level = level;
+    // Update CourseAdvisor details
+    const courseAdvisor = await CourseAdvisor.findOne({ user: userId });
 
-    // Save the updated course advisor profile
+    if (!courseAdvisor) {
+      return res.status(404).json({ message: "Course Advisor not found" });
+    }
+
+    courseAdvisor.level = level;
+
     await courseAdvisor.save();
 
-    return res.status(200).json({ 
-      message: "Profile updated successfully", 
-      courseAdvisor 
-    });
+    return res.status(200).json({ message: "Course Advisor details updated successfully", user: updatedUser, courseAdvisor });
   } catch (error) {
-    console.error("Error updating course advisor profile:", error);
+    console.error("Error updating Course Advisor details:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 }
-
 async function getAllCourseAdvisors(req, res) {
   try {
     const courseAdvisors = await CourseAdvisor.find().populate('user');

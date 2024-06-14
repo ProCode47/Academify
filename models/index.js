@@ -95,6 +95,7 @@ const parentSchema = new Schema(
 const courseAdvisorSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    level:{ type: String, default:"100", required: true },
     students: [
       {
         type: mongoose.Schema.Types.ObjectId,
