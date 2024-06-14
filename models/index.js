@@ -142,7 +142,7 @@ courseAdvisorSchema.virtual("name").get(function () {
 const courseSchema = new Schema(
   {
     name: { type: String, required: true },
-    code: { type: String, required: true, unique: true },
+    code: { type: String, required: true },
     credits: { type: Number, required: true },
     type: { type: String, required: true, default: "Complusory" },
     // Add other course fields if needed

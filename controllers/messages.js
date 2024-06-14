@@ -3,7 +3,8 @@ const { User, Student, Parent, CourseAdvisor } = require("../models");
 const sendMessageToStudent = async (req, res) => {
   try {
     const { studentId } = req.params;
-    const { sender, content } = req.body;
+    const { content } = req.body;
+    const sender = re
 
     // Validate input
     if (!sender || !content) {
