@@ -1,4 +1,5 @@
-const { Result } = require('../models');
+const mongoose = require('mongoose');
+const { Students, Result } = require('../models');
 const authController = require('./auth');
 
 // Controller function to upload results
@@ -16,8 +17,8 @@ async function uploadResults(req, res) {
     const processedResults = results.map(result => ({
       ...result,
       session: academicYear,
-      semester,
-      course
+      semester: mongoose.Types.ObjectId(semester), // Convert to ObjectId
+      course: mongoose.Types.ObjectId(course), // Convert to ObjectId
     }));
 
     // Save the processed results to the database
