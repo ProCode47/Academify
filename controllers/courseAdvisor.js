@@ -1,4 +1,4 @@
-const { CourseAdvisor, User } = require('../models');
+const { CourseAdvisor, User, Student } = require('../models');
 const authController = require('../controllers/auth');
 const bcrypt = require('bcrypt');
 
@@ -75,8 +75,31 @@ async function getAllCourseAdvisors(req, res) {
   }
 };
 
+// Function to get all students under the authenticated course advisor
+async function getAllStudentsUnderCourseAdvisor(req, res) {
+  try {
+    const userId = req.user._id;
+
+    // Find the course advisor record associated with the user ID
+    const courseAdvisor = await CourseAdvisor.findOne({ user: userId });
+
+    if (!courseAdvisor) {
+      return res.status(404).json({ message: 'Course advisor not found' });
+    }
+
+    // Find all students under the course advisor
+    const students = await Student.find({ courseAdvisor: courseAdvisor._id }).populate('user');
+
+    res.status(200).json(students);
+  } catch (error) {
+    console.error('Error fetching students under course advisor:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
 module.exports = {
   getProfile,
   updatePassword,
-  getAllCourseAdvisors
+  getAllCourseAdvisors,
+  getAllStudentsUnderCourseAdvisor
 };

@@ -47,6 +47,9 @@ router.put('/advisors/update-password', authenticate, courseAdvisorController.up
 // Route to get all course advisors
 router.get('/advisors/get-all', courseAdvisorController.getAllCourseAdvisors);
 
+// Route to get all students under a course advisor
+router.get('/advisors/students', authenticate, courseAdvisorController.getAllStudentsUnderCourseAdvisor);
+
 // Route to upload results 
 router.post('/advisors/upload-results', authenticate, resultController.uploadResults);
 
