@@ -38,15 +38,15 @@ async function uploadResults(req, res) {
 async function viewResults(req, res) {
   try {
       // Extract query parameters
-      const { session, semester, course } = req.query;
+      const { semester, course } = req.query;
 
       // Check if the necessary parameters are provided
-      if (!session || !semester || !course) {
+      if (!semester || !course) {
           return res.status(400).json({ message: 'Missing required query parameters' });
       }
 
       // Find results based on query parameters
-      const results = await Result.find({ session, semester, course });
+      const results = await Result.find({ semester, course });
 
       return res.status(200).json(results);
   } catch (error) {
