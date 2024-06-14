@@ -29,6 +29,7 @@ const registerCourses = async (req, res) => {
 
     // Find student by registration number
     const student = await Student.findOne({ reg });
+    console.log(student.courses)
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
@@ -52,8 +53,13 @@ const registerCourses = async (req, res) => {
     }
 
     // Add only new courses to student's course list
-    student.courses.push(...newCourses);
+    student.courses = [...student.courses, ...newCourses.map(course => course._id)];
+
+    // Save the updated student document
     await student.save();
+
+    // Log the updated student document for debugging
+    console.log('Updated student courses:', student.courses);
 
     res.status(200).json({ message: "Courses registered successfully" });
   } catch (error) {
@@ -61,6 +67,7 @@ const registerCourses = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 const getCoursesByLevelAndSemester = (req, res) => {
   try {

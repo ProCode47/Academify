@@ -5,10 +5,11 @@ const getStudentByRegNo = async (req, res) => {
     const userID = req.user._id;
 
     // Find student by userID
-    const student = await Student.findOne({ user: userID })
+    const reg = await Student.findOne({ user: userID }).select("reg");
+    console.log(reg);
+    const student = await Student.findOne({ reg: reg.reg })
       .populate("user")
       .populate("courses");
-
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
