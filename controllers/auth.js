@@ -14,6 +14,10 @@ const generateToken = (user) => {
   });
 };
 
+const verifyToken = (token) => {
+  return jwt.verify(token, config.secretKey);
+};
+
 const registerUser = async (req, res, userType) => {
   try {
     const { firstName, lastName, email, password } = req.body;
@@ -127,5 +131,6 @@ module.exports = {
   loginStudent: async (req, res) => loginUser(req, res, "student"),
   loginParent: async (req, res) => loginUser(req, res, "parent"),
   loginCourseAdvisor: async (req, res) => loginUser(req, res, "course_advisor"),
-  generateToken
+  generateToken,
+  verifyToken
 };
