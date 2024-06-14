@@ -7,6 +7,7 @@ const messageController = require('../controllers/messages')
 const parentController = require('../controllers/parent')
 const courseAdvisorController = require('../controllers/courseAdvisor');
 const resultController = require('../controllers/result');
+const semesterController = require('../controllers/semester');
 const authenticate = require('../middleware/authMiddleware');
 
 
@@ -56,6 +57,12 @@ router.post('/advisors/upload-results', authenticate, resultController.uploadRes
 
 // Route to view results
 router.get('/advisors/view-results', authenticate, resultController.viewResults);
+
+// Route to create semester
+router.post('/advisors/semesters', authenticate, semesterController.createSemester);
+
+// Route to get a semester by session and name
+router.get('/advisors/semesters', authenticate, semesterController.getSemester);
 
 //Parent routes
 router.get('/profile/parent', parentController.getProfile);

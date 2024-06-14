@@ -145,7 +145,8 @@ const resultSchema = new Schema(
 // Define Semester schema
 const semesterSchema = new Schema({
     name: { type: String, enum: ['Harmattan', 'Rain'], required: true },
-    session: {type: String, required: true}
+    session: {type: String, required: true},
+    courses: [{ type: Schema.Types.ObjectId, ref: "Course" }]
     // Add other semester fields if needed
 }, { timestamps: true });
 
