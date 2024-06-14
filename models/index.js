@@ -156,8 +156,12 @@ const resultSchema = new Schema(
   {
     student: { type: Schema.Types.ObjectId, ref: "Student", required: true },
     course: { type: Schema.Types.ObjectId, ref: "Course", required: true },
-    grade: { type: String, required: true },
+    grade: { type: String, required: false },
     semester: { type: Schema.Types.ObjectId, ref: "Semester", required: true },
+    exam: { type: Number, required: true },
+    lab: { type: Number, required: true },
+    test: { type: Number, required: true },
+    regno: { type: String, required: true },
     // Add other result fields if needed
   },
   { timestamps: true }

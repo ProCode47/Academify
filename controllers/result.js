@@ -1,51 +1,52 @@
-const { Student, Result } = require("../models");
-const authController = require("./auth");
+const { Result } = require('../models');
+const authController = require('./auth');
 
 // Controller function to upload results
 async function uploadResults(req, res) {
   try {
-      // Extract the academic year, semester, course, and results from the request body
-      const { academicYear, semester, course, results } = req.body;
+    // Extract the academic year, semester, course, and results from the request body
+    const { academicYear, semester, course, results } = req.body;
 
-      // Check if the necessary parameters are provided
-      if (!academicYear || !semester || !course || !results) {
-          return res.status(400).json({ message: 'Missing required parameters' });
-      }
+    // Check if the necessary parameters are provided
+    if (!academicYear || !semester || !course || !results) {
+      return res.status(400).json({ message: 'Missing required parameters' });
+    }
 
-      // Process each result to include academic year, semester, and course
-      const processedResults = results.map(result => ({
-          ...result,
-          academicYear,
-          semester,
-          course
-      }));
+    // Process each result to include academic year, semester, and course
+    const processedResults = results.map(result => ({
+      ...result,
+      session: academicYear,
+      semester,
+      course
+    }));
 
-      // Save the processed results to the database
-      await Result.insertMany(processedResults);
+    // Save the processed results to the database
+    const insertedResults = await Result.create(processedResults);
 
-      // Generate token for the user (course advisor)
-      const token = authController.generateToken(req.user);
+    // Generate token for the user (course advisor)
+    const token = authController.generateToken(req.user);
 
-      return res.status(201).json({ message: 'Results uploaded successfully', token });
+    return res.status(201).json({ message: 'Results uploaded successfully', token });
   } catch (error) {
-      console.error('Error uploading results:', error);
-      return res.status(500).json({ message: 'Internal server error' });
+    console.error('Error uploading results:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 }
+
 
 // Controller function to view previously uploaded results
 async function viewResults(req, res) {
   try {
       // Extract query parameters
-      const { academicYear, semester, course } = req.query;
+      const { session, semester, course } = req.query;
 
       // Check if the necessary parameters are provided
-      if (!academicYear || !semester || !course) {
+      if (!session || !semester || !course) {
           return res.status(400).json({ message: 'Missing required query parameters' });
       }
 
       // Find results based on query parameters
-      const results = await Result.find({ academicYear, semester, course });
+      const results = await Result.find({ session, semester, course });
 
       return res.status(200).json(results);
   } catch (error) {
