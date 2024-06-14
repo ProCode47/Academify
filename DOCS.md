@@ -599,7 +599,7 @@ Add child to the parent using reg no.
 - **Example Request:**
   ```json
   {
-    "reg": "122345656"
+    "regNo": "122345656"
   }
   ```
 - **Example Response:**
