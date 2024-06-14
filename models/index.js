@@ -29,6 +29,7 @@ const studentSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     reg: { type: String, required: true },
+    level:{type: String, required: false},
     sessions: [{ type: sessionSchema, required: false }],
     courseAdvisor: {
       type: mongoose.Schema.Types.ObjectId,
