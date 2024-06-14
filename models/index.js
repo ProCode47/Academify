@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 // sessions schema
 const sessionSchema = new Schema({
   session: { type: String, required: true },
+  level:{ type: String, required: false },
   harmattan: [{ type: Schema.Types.ObjectId, ref: "Course" }],
   rain: [{ type: Schema.Types.ObjectId, ref: "Course" }],
 });

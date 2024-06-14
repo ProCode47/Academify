@@ -25,7 +25,7 @@ const loadCourses = async (req, res) => {
 };
 const registerCourses = async (req, res) => {
   try {
-    const { reg, session: sessionName, semester, courseCodes } = req.body;
+    const { reg, session: sessionName, level, semester, courseCodes } = req.body;
 
     // Validate semester value
     if (!["rain", "harmattan"].includes(semester)) {
@@ -44,11 +44,12 @@ const registerCourses = async (req, res) => {
       return res.status(400).json({ message: "Some courses not found" });
     }
 
-    // Find or create session for the student
-    let session = student.sessions.find(s => s.session === sessionName);
+    // Find or create session for the student with the given level
+    let session = student.sessions.find(s => s.session === sessionName && s.level === level);
     if (!session) {
       session = {
         session: sessionName,
+        level: level,
         harmattan: [],
         rain: []
       };
@@ -74,7 +75,7 @@ const registerCourses = async (req, res) => {
     await student.save();
 
     // Log the updated student document for debugging
-    console.log(`Updated student ${semester} courses for session ${sessionName}:`, session[semester]);
+    console.log(`Updated student ${semester} courses for session ${sessionName} at level ${level}:`, session[semester]);
 
     res.status(200).json({ message: "Courses registered successfully" });
   } catch (error) {
@@ -82,6 +83,8 @@ const registerCourses = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
 
 
 

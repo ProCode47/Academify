@@ -2,7 +2,7 @@ GET http://localhost:5000/courses/100/rain HTTP/1.1
 
 ###
 GET http://localhost:5000/student/profile HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjVhM2Y5ZTI5MzcyNjAwNDM3ZTU0NzkiLCJlbWFpbCI6InlvQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE4MzY5OTc3LCJleHAiOjE3MTgzNzM1Nzd9.gxMpRc2e9-zgfixso12fBKQFvmN3xhKAvDfUfkWRiVE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjVhM2Y5ZTI5MzcyNjAwNDM3ZTU0NzkiLCJlbWFpbCI6InlvQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE4Mzc1MzA1LCJleHAiOjE3MTg0NjE3MDV9.d3y_LlgewSwz_nCLZuBcfgWOb4TDuIaRBeZTZ9AU1m4
 
 
 ###
@@ -95,6 +95,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjQ4Z
 {
     "regNo": 2019111111
 }
+
+###
+POST  http://localhost:5000/advisors/semesters HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjQ4ZTg3YjMxZTAwZDkzYWM4Y2Y3MWQiLCJlbWFpbCI6ImVrZWdyYW50QGdtYWlsLmNvbSIsImlhdCI6MTcxODM2MzA0MiwiZXhwIjoxNzE4MzY2NjQyfQ.0iPzWpQCAcKuJuJIc-dc3jjm1f4qo9T_uXqj3jYQIB0
+
+{
+    "regNo": 2019111111
+}
+
 
 
 

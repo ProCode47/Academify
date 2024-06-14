@@ -10,7 +10,7 @@ dotenv.config();
 
 const generateToken = (user) => {
   return jwt.sign({ userId: user._id, email: user.email }, config.secretKey, {
-    expiresIn: "1h",
+    expiresIn: "24h",
   });
 };
 
