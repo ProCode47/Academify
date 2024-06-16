@@ -68,7 +68,7 @@ async function getStudentResult(req, res) {
     const userID = req.user._id;
 
     // Find student by registration number
-    const student = await Student.findOne({ user: userID }).select("reg");
+    const student = await Students.findOne({ user: userID }).select("reg");
 
     // Find results for the student
     const results = await Result.find({ regno: student.reg }).populate(
