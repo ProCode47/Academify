@@ -160,7 +160,7 @@ const resultSchema = new Schema(
     exam: { type: Number, required: true },
     lab: { type: Number, required: true },
     test: { type: Number, required: true },
-    regno: { type: String, required: true },
+    regno: { type: Number, required: true },
     total: { type: Number, required: true },
     name: { type: String, required: true },
     // Add other result fields if needed
