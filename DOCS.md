@@ -840,3 +840,57 @@ Authorization: Bearer <your_token_here>
   "updatedAt": "2023-01-01T00:00:00.000Z"
 }
 ```
+
+---
+
+### Get result
+
+#### Description
+
+Retrieves  result.
+
+- **URL:** `/advisors/view-results`
+- **Method:** `GET`
+- **Auth Required:** `Yes`
+- **Permissions Required:** `None`
+**Query Parameters:**
+- semester (string, required): Id of semester.
+- course (string, required): Id of course.
+
+#### Responses
+
+- **200 OK:** Semester found.
+  - **Content:** JSON object with semester details and its courses.
+- **400 Bad Request:** Invalid query parameters.
+  - **Content:** JSON object with an error message.
+- **401 Unauthorized:** Authentication failure.
+  - **Content:** JSON object with an error message.
+- **404 Not Found:** Semester not found.
+  - **Content:** JSON object with an error message.
+- **500 Internal Server Error:** An error occurred on the server while processing the request.
+  - **Content:** JSON object with an error message.
+  
+#### Example Request
+
+```http
+GET http://localhost:5000/advisors/view-results?semester=666c76476c3862539975c76e&course=6621b93813c28c2a6caa444f
+Authorization: Bearer <your_token_here>
+```
+
+#### Example Response
+```json
+[
+  {
+    "_id": "666c80aed41e9659ecf1b590",
+    "exam": 85,
+    "lab": 90,
+    "test": 75,
+    "regno": "2024001",
+    "semester": "666c76476c3862539975c76e",
+    "course": "6621b93813c28c2a6caa444f",
+    "createdAt": "2024-06-14T17:41:02.495Z",
+    "updatedAt": "2024-06-14T17:41:02.495Z",
+    "__v": 0
+  }
+]
+```

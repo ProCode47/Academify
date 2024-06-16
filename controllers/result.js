@@ -5,23 +5,24 @@ const authController = require('./auth');
 // Controller function to upload results
 async function uploadResults(req, res) {
   try {
-    // Extract the academic year, semester, course, and results from the request body
-    const {semester, course, results } = req.body;
+    // Extract the semester, course, and results from the request body
+    const { semester, course, results } = req.body;
 
     // Check if the necessary parameters are provided
     if (!semester || !course || !results) {
       return res.status(400).json({ message: 'Missing required parameters' });
     }
 
-    // Process each result to include academic year, semester, and course
+    
+    // Process each result to include semester and course
     const processedResults = results.map(result => ({
       ...result,
-      semester: semester, // Convert to ObjectId
-      course: course, // Convert to ObjectId
+      semester: semester,
+      course: course,
     }));
 
     // Save the processed results to the database
-    const insertedResults = await Result.create(processedResults);
+    const insertedResults = await Result.insertMany(processedResults);
 
     // Generate token for the user (course advisor)
     const token = authController.generateToken(req.user);
@@ -33,20 +34,23 @@ async function uploadResults(req, res) {
   }
 }
 
+module.exports = uploadResults;
+
+
 
 // Controller function to view previously uploaded results
 async function viewResults(req, res) {
   try {
       // Extract query parameters
-      const { session, semester, course } = req.query;
+      const { semester, course } = req.query;
 
       // Check if the necessary parameters are provided
-      if (!session || !semester || !course) {
+      if (!semester || !course) {
           return res.status(400).json({ message: 'Missing required query parameters' });
       }
 
       // Find results based on query parameters
-      const results = await Result.find({ session, semester, course });
+      const results = await Result.find({ semester, course });
 
       return res.status(200).json(results);
   } catch (error) {
@@ -61,7 +65,7 @@ async function getStudentResult(req, res) {
     const userID = req.user._id;
 
     // Find student by registration number
-    const student = await Student.findOne({ user: userID }).select("reg");
+    const student = await Students.findOne({ user: userID }).select("reg");
 
     // Find results for the student
     const results = await Result.find({ regno: student.reg }).populate(
