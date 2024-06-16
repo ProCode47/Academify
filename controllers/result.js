@@ -13,15 +13,12 @@ async function uploadResults(req, res) {
       return res.status(400).json({ message: 'Missing required parameters' });
     }
 
-    // Convert semester and course to ObjectId
-    const semesterId = mongoose.Types.ObjectId(semester);
-    const courseId = mongoose.Types.ObjectId(course);
-
+    
     // Process each result to include semester and course
     const processedResults = results.map(result => ({
       ...result,
-      semester: semesterId,
-      course: courseId,
+      semester: semester,
+      course: course,
     }));
 
     // Save the processed results to the database
