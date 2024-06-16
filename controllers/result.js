@@ -70,6 +70,8 @@ async function getStudentResult(req, res) {
     // Find results for the student
     const results = await Result.find({ regno: student.reg }).populate(
       "course"
+    ).populate(
+      "semester"
     );
 
     if (!results) {
