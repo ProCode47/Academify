@@ -161,7 +161,8 @@ const resultSchema = new Schema(
     lab: { type: Number, required: true },
     test: { type: Number, required: true },
     regno: { type: String, required: true },
-    total:{ type: Number, required: true },
+    total: { type: Number, required: true },
+    name: { type: String, required: true },
     // Add other result fields if needed
   },
   { timestamps: true }

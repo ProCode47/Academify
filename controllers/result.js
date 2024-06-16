@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { Students, Result } = require('../models');
+const { Result, Student } = require('../models');
 const authController = require('./auth');
 
 // Controller function to upload results
