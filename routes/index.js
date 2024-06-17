@@ -67,6 +67,6 @@ router.get('/advisors/semesters', authenticate, semesterController.getSemesters)
 router.get('/parent/profile',authenticate, parentController.getProfile);
 router.post('/parent/editProfile',authenticate, parentController.editProfile)
 router.post('/parent/addChild',authenticate, parentController.addChild)
-router.get('/parent/getChildResult',authenticate, parentController.getChildResult)
+router.post('/parent/getChildResult',authenticate, parentController.getChildResult)
 
 module.exports = router;
