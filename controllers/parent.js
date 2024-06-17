@@ -103,26 +103,24 @@ const editProfile = async (req, res) => {
 //Get Results
 const getChildResult = async (req,res) => {
     try{
-        const {reg, semesterName, session} = req.body
+        const {regNo} = req.body
 
-        const semester = await Semester.findOne({name: semesterName, session: session})
-
-        const student = await Student.findOne({reg: reg})
-
-        if (!semester) {
-            return res.status(404).json({ message: 'Semester not found' });
+        const results = await Result.find({ regno: regNo }).populate(
+          "course"
+        ).populate(
+          "semester"
+        );
+    
+        if (!results) {
+        return res
+            .status(404)
+            .json({ message: "No results found for the student" });
         }
-
-        if (!student) {
-            return res.status(404).json({ message: 'Student not found' });
-        }
-        
-        const result = await Result.find({student: student._id, semester: semester._id}).populate('course')
-
-        return res.status(200).json({result})
+    
+        res.status(200).json({ results });
     } catch(error){
-        console.error("Error fetching child's result:", error);
-        return res.status(500).json({ message: "Internal server error" });
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
@@ -156,14 +154,13 @@ const addChild = async (req,res) =>{
             return res.status(404).json({ message: 'Child already added' });
         }
 
-        Parent.findOneAndUpdate({user : parentID}, {$push: {children: student._id}}, {new: true}, (err)=>{
-            if(err){
-                console.error(err);
-                res.status(500).json({ message: 'Internal server error' })
-            } else{
-                console.log('Successfull')
-                res.status(200).json({  message: 'Child Added Successfully'})
-            }
+        Parent.findOneAndUpdate({user : parentID}, {$push: {children: student._id}}, {new: true})
+        .then(()=>{
+            res.status(200).json({  message: 'Child Added Successfully'})
+        })
+        .catch((err)=>{
+            console.error(err);
+            res.status(500).json({ message: 'Internal server error' })
         })
 
     } catch (error){
