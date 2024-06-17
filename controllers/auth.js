@@ -70,7 +70,7 @@ const registerUser = async (req, res, userType) => {
     await roleSpecificData.save();
 
     const token = generateToken(newUser);
-    res.status(201).json({ token });
+    res.status(201).json({ token, userID: newUser._id, userType });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
