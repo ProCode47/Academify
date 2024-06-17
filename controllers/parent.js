@@ -154,14 +154,13 @@ const addChild = async (req,res) =>{
             return res.status(404).json({ message: 'Child already added' });
         }
 
-        Parent.findOneAndUpdate({user : parentID}, {$push: {children: student._id}}, {new: true}, (err)=>{
-            if(err){
-                console.error(err);
-                res.status(500).json({ message: 'Internal server error' })
-            } else{
-                console.log('Successfull')
-                res.status(200).json({  message: 'Child Added Successfully'})
-            }
+        Parent.findOneAndUpdate({user : parentID}, {$push: {children: student._id}}, {new: true})
+        .then(()=>{
+            res.status(200).json({  message: 'Child Added Successfully'})
+        })
+        .catch((err)=>{
+            console.error(err);
+            res.status(500).json({ message: 'Internal server error' })
         })
 
     } catch (error){
