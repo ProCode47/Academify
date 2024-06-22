@@ -1,15 +1,13 @@
-// controllers/authController.js
-
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User, Student, Parent, CourseAdvisor } = require("../models");
-const config = require('../config/config')
+const config = require("../config/config");
 
 dotenv.config();
 
 const generateToken = (user) => {
-  return jwt.sign({ userId: user._id, email: user.email }, config.secretKey, {
+  return jwt.sign({ userId: user._id, email: user.email, role: user.role }, config.secretKey, {
     expiresIn: "24h",
   });
 };
@@ -50,7 +48,7 @@ const registerUser = async (req, res, userType) => {
         roleSpecificData = new Student({
           user: newUser._id,
           reg,
-          courseAdvisor: classAdvisor,
+          courseAdvisor: classAdvisor._id,
         });
         await roleSpecificData.save();
 
@@ -60,14 +58,15 @@ const registerUser = async (req, res, userType) => {
         break;
       case "parent":
         roleSpecificData = new Parent({ user: newUser._id });
+        await roleSpecificData.save();
         break;
       case "course_advisor":
         roleSpecificData = new CourseAdvisor({ user: newUser._id });
+        await roleSpecificData.save();
         break;
       default:
-        break;
+        return res.status(400).json({ message: "Invalid user type" });
     }
-    await roleSpecificData.save();
 
     const token = generateToken(newUser);
     res.status(201).json({ token, userID: newUser._id, userType });
@@ -93,24 +92,38 @@ const loginUser = async (req, res, userType) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
+    // Verify if the user's role matches the requested userType
+    if (user.role !== userType) {
+      return res.status(401).json({ message: `Invalid role. You are registered as a ${user.role}` });
+    }
+
     let userID;
-    
+
     // Get the respective ID based on user type
     switch (userType) {
       case "student":
         const student = await Student.findOne({ user: user._id });
+        if (!student) {
+          return res.status(404).json({ message: "Student data not found" });
+        }
         userID = student._id;
         break;
       case "parent":
         const parent = await Parent.findOne({ user: user._id });
+        if (!parent) {
+          return res.status(404).json({ message: "Parent data not found" });
+        }
         userID = parent._id;
         break;
       case "course_advisor":
         const courseAdvisor = await CourseAdvisor.findOne({ user: user._id });
+        if (!courseAdvisor) {
+          return res.status(404).json({ message: "Course advisor data not found" });
+        }
         userID = courseAdvisor._id;
         break;
       default:
-        break;
+        return res.status(400).json({ message: "Invalid user type" });
     }
 
     // Generate token
@@ -122,15 +135,13 @@ const loginUser = async (req, res, userType) => {
   }
 };
 
-
 module.exports = {
   registerStudent: async (req, res) => registerUser(req, res, "student"),
   registerParent: async (req, res) => registerUser(req, res, "parent"),
-  registerCourseAdvisor: async (req, res) =>
-    registerUser(req, res, "course_advisor"),
+  registerCourseAdvisor: async (req, res) => registerUser(req, res, "course_advisor"),
   loginStudent: async (req, res) => loginUser(req, res, "student"),
   loginParent: async (req, res) => loginUser(req, res, "parent"),
   loginCourseAdvisor: async (req, res) => loginUser(req, res, "course_advisor"),
   generateToken,
-  verifyToken
+  verifyToken,
 };
