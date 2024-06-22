@@ -94,7 +94,7 @@ const loginUser = async (req, res, userType) => {
 
     // Verify if the user's role matches the requested userType
     if (user.role !== userType) {
-      return res.status(401).json({ message: `Invalid role. You are registered as a ${user.role}` });
+      return res.status(401).json({ message: `Invalid role. You are registered as a ${user.role === "course_advisor" ? "course advisor" : user.role}` });
     }
 
     let userID;
