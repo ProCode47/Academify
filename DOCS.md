@@ -381,6 +381,10 @@ Retrieves courses for a particular level and semester.
 
 ---
 
+Here’s the modified documentation based on the provided format:
+
+---
+
 ## Messaging Routes
 
 ### Messaging between Course Advisor and Student
@@ -399,8 +403,8 @@ Sends a message to a student.
 
   ```json
   {
-    "sender": "6115d591b8bbcd001bf18b7e",
-    "content": "Don't forget about the upcoming exam."
+    "sender": "6648834ecf24d9004483a65c",
+    "content": "This is a test message to the student."
   }
   ```
 
@@ -425,7 +429,7 @@ Sends a message from a student to their advisor.
 
   ```json
   {
-    "content": "I have a question about the assignment."
+    "content": "This is a test message from student to the advisor."
   }
   ```
 
@@ -444,7 +448,22 @@ Fetches messages from a student.
 - **URL:** `/api/messages/student/:studentId`
 - **Method:** `GET`
 - **Description:** Fetch messages from a student.
-- **Example Response:** Array of message objects
+- **Example Response:** Array of message objects.
+
+  ```json
+  [
+    {
+      "sender": "6648834ecf24d9004483a65c",
+      "receiver": "662222f300b1dc1f9411b680",
+      "content": "This is a test message to the student."
+    },
+    {
+      "sender": "662222f300b1dc1f9411b680",
+      "receiver": "6648834ecf24d9004483a65c",
+      "content": "This is a test message from the student to the advisor."
+    }
+  ]
+  ```
 
 ### Messaging between Parent and Course Advisor
 
@@ -462,8 +481,8 @@ Sends a message to a parent.
 
   ```json
   {
-    "sender": "6115d591b8bbcd001bf18b7e",
-    "content": "Your child did well in the recent test."
+    "sender": "662222f300b1dc1f9411b680",
+    "content": "This is a test message to the parent."
   }
   ```
 
@@ -488,7 +507,7 @@ Sends a message from a parent to their child's advisor.
 
   ```json
   {
-    "content": "I have a concern about my child's progress."
+    "content": "This is a test message from parent to advisor."
   }
   ```
 
@@ -507,10 +526,44 @@ Fetches messages from a parent.
 - **URL:** `/api/messages/parent/:parentId`
 - **Method:** `GET`
 - **Description:** Fetch messages from a parent.
-- **Example Response:** Array of message objects
+- **Example Response:** Array of message objects.
 
----
+  ```json
+  [
+    {
+      "sender": "662222f300b1dc1f9411b680",
+      "receiver": "6639ad4166675a0044a8a2ab",
+      "content": "This is a test message to the parent."
+    }
+  ]
+  ```
 
+### Messaging between Course Advisor and Parent/Student
+
+#### Get Messages for an Advisor
+
+Fetches all messages sent to an advisor.
+
+- **URL:** `/api/messages/advisor/:advisorId`
+- **Method:** `GET`
+- **Description:** Fetch messages sent to an advisor.
+- **Example Response:** Array of message objects.
+
+  ```json
+  [
+    {
+      "sender": "662222f300b1dc1f9411b680",
+      "receiver": "666c0fdc610c095424bf438c",
+      "content": "This is a test message from student to advisor."
+    },
+    {
+      "sender": "6639ad4166675a0044a8a2ab",
+      "receiver": "666c0fdc610c095424bf438c",
+      "content": "This is a test message from parent to advisor."
+    }
+  ]
+  ```
+  
 ## Course Adviser Routes
 
 ### `getProfile`
