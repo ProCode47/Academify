@@ -1,10 +1,9 @@
-const { User, Student, Parent, CourseAdvisor } = require("../models");
+const { Student, Parent, CourseAdvisor, Message } = require("../models");
 
 const sendMessageToStudent = async (req, res) => {
   try {
     const { studentId } = req.params;
-    const { content } = req.body;
-    const sender = re
+    const { content, sender } = req.body;
 
     // Validate input
     if (!sender || !content) {
@@ -14,13 +13,18 @@ const sendMessageToStudent = async (req, res) => {
     }
 
     // Find student by ID
-    const student = await Student.findById(studentId);
+    const student = await Student.findById(studentId).populate('user');
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
-    // Store the message
-    student.messages.push({ sender, receiver: student.user, content });
-    await student.save();
+
+    // Create and save the message in the Messages collection
+    const message = new Message({
+      sender,
+      receiver: student.user._id,
+      content,
+    });
+    await message.save();
 
     res.status(200).json({ message: "Message sent to student successfully" });
   } catch (error) {
@@ -28,6 +32,7 @@ const sendMessageToStudent = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 const sendStudentMessageToAdvisor = async (req, res) => {
   try {
     const { studentId } = req.params;
@@ -35,23 +40,22 @@ const sendStudentMessageToAdvisor = async (req, res) => {
 
     // Validate input
     if (!content) {
-      return res
-        .status(400)
-        .json({ message: "Sender and content are required" });
+      return res.status(400).json({ message: "Content is required" });
     }
 
     // Find student by ID
-    const student = await Student.findById(studentId);
+    const student = await Student.findById(studentId).populate('user courseAdvisor');
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
-    // Store the message
-    student.messages.push({
-      sender: student.user,
-      receiver: student.courseAdvisor,
+
+    // Create and save the message in the Messages collection
+    const message = new Message({
+      sender: student.user._id,
+      receiver: student.courseAdvisor._id,
       content,
     });
-    await student.save();
+    await message.save();
 
     res.status(200).json({ message: "Message sent to advisor successfully" });
   } catch (error) {
@@ -70,8 +74,10 @@ const getMessagesFromStudent = async (req, res) => {
       return res.status(404).json({ message: "Student not found" });
     }
 
-    // Fetch messages from the student
-    const messages = student.messages;
+    // Fetch messages where the student is the receiver
+    const messages = await Message.find({ receiver: student.user._id })
+      .populate('sender receiver', 'name email') // Optionally populate user info
+      .sort({ timestamp: -1 }); // Optionally sort by date
 
     res.status(200).json({ messages });
   } catch (error) {
@@ -87,20 +93,22 @@ const sendMessageToParent = async (req, res) => {
 
     // Validate input
     if (!sender || !content) {
-      return res
-        .status(400)
-        .json({ message: "Sender and content are required" });
+      return res.status(400).json({ message: "Sender and content are required" });
     }
 
     // Find parent by ID
-    const parent = await Parent.findById(parentId);
+    const parent = await Parent.findById(parentId).populate('user');
     if (!parent) {
       return res.status(404).json({ message: "Parent not found" });
     }
 
-    // Store the message
-    parent.messages.push({ sender, receiver: parent.user, content });
-    await parent.save();
+    // Create and save the message in the Messages collection
+    const message = new Message({
+      sender,
+      receiver: parent.user._id,
+      content,
+    });
+    await message.save();
 
     res.status(200).json({ message: "Message sent to parent successfully" });
   } catch (error) {
@@ -120,32 +128,24 @@ const sendParentMessageToAdvisor = async (req, res) => {
     }
 
     // Find parent by ID
-    const parent = await Parent.findById(parentId);
+    const parent = await Parent.findById(parentId).populate('user');
     if (!parent) {
       return res.status(404).json({ message: "Parent not found" });
     }
 
     // Find advisor by ID
-    const advisor = await CourseAdvisor.findById(advisorID);
+    const advisor = await CourseAdvisor.findById(advisorID).populate('user');
     if (!advisor) {
       return res.status(404).json({ message: "Advisor not found" });
     }
 
-    // Check if the parent ID already exists in the parents array of the advisor
-    if (!advisor.parents.includes(parentId)) {
-      // Add the parent ID to the parents array
-      advisor.parents.push(parentId);
-      // Save the changes to the advisor
-      await advisor.save();
-    }
-
-    // Store the message
-    parent.messages.push({
-      sender: parent.user,
-      receiver: advisor.user,
+    // Create and save the message in the Messages collection
+    const message = new Message({
+      sender: parent.user._id,
+      receiver: advisor.user._id,
       content,
     });
-    await parent.save();
+    await message.save();
 
     res.status(200).json({ message: "Message sent to advisor successfully" });
   } catch (error) {
@@ -153,7 +153,6 @@ const sendParentMessageToAdvisor = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 const getMessagesFromParent = async (req, res) => {
   try {
@@ -165,8 +164,29 @@ const getMessagesFromParent = async (req, res) => {
       return res.status(404).json({ message: "Parent not found" });
     }
 
-    // Fetch messages from the parent
-    const messages = parent.messages;
+    // Fetch messages where the parent is the receiver
+    const messages = await Message.find({ receiver: parent.user._id })
+      .populate('sender receiver', 'name email')
+      .sort({ timestamp: -1 });
+
+    res.status(200).json({ messages });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+const getMessagesForAdvisor = async (req, res) => {
+  try {
+    const { advisorID } = req.params;
+
+    // Find advisor by ID
+    const advisor = await CourseAdvisor.findById(advisorID);
+    if (!advisor) {
+      return res.status(404).json({ message: "Advisor not found" });
+    }
+
+    // Fetch messages for the advisor
+    const messages = await Message.find({ receiver: advisor.user._id });
 
     res.status(200).json({ messages });
   } catch (error) {
@@ -175,6 +195,7 @@ const getMessagesFromParent = async (req, res) => {
   }
 };
 
+
 module.exports = {
   sendMessageToStudent,
   getMessagesFromStudent,
@@ -182,4 +203,5 @@ module.exports = {
   getMessagesFromParent,
   sendStudentMessageToAdvisor,
   sendParentMessageToAdvisor,
+  getMessagesForAdvisor
 };

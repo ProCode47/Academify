@@ -194,6 +194,13 @@ const notificationSchema = new Schema(
   { timestamps: true }
 );
 
+const messageSchema = new mongoose.Schema({
+  sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  receiver: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  content: { type: String, required: true },
+  timestamp: { type: Date, default: Date.now },
+});
+
 const User = mongoose.model("User", userSchema);
 const Student = mongoose.model("Student", studentSchema);
 const Parent = mongoose.model("Parent", parentSchema);
@@ -202,6 +209,7 @@ const Course = mongoose.model("Course", courseSchema);
 const Result = mongoose.model("Result", resultSchema);
 const Semester = mongoose.model("Semester", semesterSchema);
 const Notification = mongoose.model("Notification", notificationSchema);
+const Message = mongoose.model('Message', messageSchema);
 
 module.exports = {
   User,
@@ -212,4 +220,5 @@ module.exports = {
   Result,
   Semester,
   Notification,
+  Message
 };
