@@ -13,7 +13,7 @@ const sendMessageToStudent = async (req, res) => {
     }
 
     // Find student by ID
-    const student = await Student.findById(studentId).populate('user');
+    const student = await Student.findById(studentId).populate("user");
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
@@ -44,7 +44,9 @@ const sendStudentMessageToAdvisor = async (req, res) => {
     }
 
     // Find student by ID
-    const student = await Student.findById(studentId).populate('user courseAdvisor');
+    const student = await Student.findById(studentId).populate(
+      "user courseAdvisor"
+    );
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
@@ -76,7 +78,7 @@ const getMessagesFromStudent = async (req, res) => {
 
     // Fetch messages where the student is the receiver
     const messages = await Message.find({ receiver: student.user._id })
-      .populate('sender receiver', 'name email') // Optionally populate user info
+      .populate("sender receiver", "firstName lastName email role")
       .sort({ timestamp: -1 }); // Optionally sort by date
 
     res.status(200).json({ messages });
@@ -93,11 +95,13 @@ const sendMessageToParent = async (req, res) => {
 
     // Validate input
     if (!sender || !content) {
-      return res.status(400).json({ message: "Sender and content are required" });
+      return res
+        .status(400)
+        .json({ message: "Sender and content are required" });
     }
 
     // Find parent by ID
-    const parent = await Parent.findById(parentId).populate('user');
+    const parent = await Parent.findById(parentId).populate("user");
     if (!parent) {
       return res.status(404).json({ message: "Parent not found" });
     }
@@ -128,13 +132,13 @@ const sendParentMessageToAdvisor = async (req, res) => {
     }
 
     // Find parent by ID
-    const parent = await Parent.findById(parentId).populate('user');
+    const parent = await Parent.findById(parentId).populate("user");
     if (!parent) {
       return res.status(404).json({ message: "Parent not found" });
     }
 
     // Find advisor by ID
-    const advisor = await CourseAdvisor.findById(advisorID).populate('user');
+    const advisor = await CourseAdvisor.findById(advisorID).populate("user");
     if (!advisor) {
       return res.status(404).json({ message: "Advisor not found" });
     }
@@ -166,7 +170,7 @@ const getMessagesFromParent = async (req, res) => {
 
     // Fetch messages where the parent is the receiver
     const messages = await Message.find({ receiver: parent.user._id })
-      .populate('sender receiver', 'name email')
+      .populate("sender receiver", "firstName lastName email role")
       .sort({ timestamp: -1 });
 
     res.status(200).json({ messages });
@@ -186,7 +190,9 @@ const getMessagesForAdvisor = async (req, res) => {
     }
 
     // Fetch messages for the advisor
-    const messages = await Message.find({ receiver: advisor.user._id });
+    const messages = await Message.find({
+      receiver: advisor.user._id,
+    }).populate("sender receiver", "firstName lastName email role");
 
     res.status(200).json({ messages });
   } catch (error) {
@@ -195,7 +201,6 @@ const getMessagesForAdvisor = async (req, res) => {
   }
 };
 
-
 module.exports = {
   sendMessageToStudent,
   getMessagesFromStudent,
@@ -203,5 +208,5 @@ module.exports = {
   getMessagesFromParent,
   sendStudentMessageToAdvisor,
   sendParentMessageToAdvisor,
-  getMessagesForAdvisor
+  getMessagesForAdvisor,
 };
