@@ -51,10 +51,11 @@ const sendStudentMessageToAdvisor = async (req, res) => {
       return res.status(404).json({ message: "Student not found" });
     }
 
+
     // Create and save the message in the Messages collection
     const message = new Message({
       sender: student.user._id,
-      receiver: student.courseAdvisor._id,
+      receiver: student.courseAdvisor.user._id,
       content,
     });
     await message.save();
@@ -77,7 +78,9 @@ const getMessagesFromStudent = async (req, res) => {
     }
 
     // Fetch messages where the student is the receiver
-    const messages = await Message.find({ receiver: student.user._id })
+    const messages = await Message.find({
+      $or: [{ receiver: student.user._id }, { sender: student.user._id }],
+    })
       .populate("sender receiver", "firstName lastName email role")
       .sort({ timestamp: -1 }); // Optionally sort by date
 
@@ -169,7 +172,9 @@ const getMessagesFromParent = async (req, res) => {
     }
 
     // Fetch messages where the parent is the receiver
-    const messages = await Message.find({ receiver: parent.user._id })
+    const messages = await Message.find({
+      $or: [{ receiver: parent.user._id }, { sender: parent.user._id }],
+    })
       .populate("sender receiver", "firstName lastName email role")
       .sort({ timestamp: -1 });
 
@@ -191,7 +196,7 @@ const getMessagesForAdvisor = async (req, res) => {
 
     // Fetch messages for the advisor
     const messages = await Message.find({
-      receiver: advisor.user._id,
+      $or: [{ receiver: advisor.user._id }, { sender: advisor.user._id }],
     }).populate("sender receiver", "firstName lastName email role");
 
     res.status(200).json({ messages });
