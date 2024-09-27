@@ -124,6 +124,54 @@ const getChildResult = async (req,res) => {
     }
 }
 
+const getLatestChildResult = async (req,res) =>{
+    try{
+        const {regNo} = req.body
+
+        const studentResults = await Result.find({ regno: regNo })
+        .populate("course")
+        .populate("semester")
+        .sort({ "semester.session": -1, "semester.name": -1 }) // Sort by session and semester name
+        .exec();
+        
+        console.log(studentResults)
+
+        if (studentResults.length === 0) {
+        return res.status(404).json({ message: "No results found for the student" });
+        }
+
+        // Get the latest two semesters
+        const latestSemesters = Array.from(
+        new Set(studentResults.map((result) => result.semester._id.toString()))
+        ).slice(0, 2);
+
+        // Initialize results object with null values
+        const resultsBySemester = {
+        firstSemester: null,
+        secondSemester: null
+        };
+
+        // Populate the results object based on available semesters
+        if (latestSemesters.length > 0) {
+        resultsBySemester.firstSemester = studentResults.filter(
+            (result) => result.semester._id.toString() === latestSemesters[0]
+        );
+        }
+
+        if (latestSemesters.length > 1) {
+        resultsBySemester.secondSemester = studentResults.filter(
+            (result) => result.semester._id.toString() === latestSemesters[1]
+        );
+        }
+
+        res.status(200).json(resultsBySemester);
+
+    } catch(error){
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 //add child to parent
 const addChild = async (req,res) =>{
     try {
@@ -173,5 +221,6 @@ module.exports = {
     getProfile,
     editProfile,
     addChild,
-    getChildResult
+    getChildResult,
+    getLatestChildResult
 };

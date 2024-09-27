@@ -72,5 +72,6 @@ router.get('/parent/profile',authenticate, parentController.getProfile);
 router.post('/parent/editProfile',authenticate, parentController.editProfile)
 router.post('/parent/addChild',authenticate, parentController.addChild)
 router.post('/parent/getChildResult',authenticate, parentController.getChildResult)
+router.post('/parent/getLatestChildResult',authenticate, parentController.getLatestChildResult)
 
 module.exports = router;
