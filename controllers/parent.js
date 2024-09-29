@@ -16,17 +16,22 @@ const getProfile = async (req, res) => {
   try {
     const parentID = req.user._id;
 
-    //Find parent by id
     const parent = await Parent.findOne({ user: parentID }).populate([
       {
         path: "user",
       },
       {
         path: "children",
-        populate: {
-          path: "user",
-          model: "User",
-        },
+        populate: [
+          {
+            path: "user",
+            model: "User",
+          },
+          {
+            path: "courseAdvisor",
+            model: "CourseAdvisor", // Assuming the model for course advisors is "CourseAdvisor"
+          },
+        ],
       },
     ]);
 
