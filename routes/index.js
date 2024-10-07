@@ -42,7 +42,7 @@ router.post('/api/messages/parent/advisor/:parentId/:advisorID', messageControll
 router.get('/api/messages/parent/:parentId', messageController.getMessagesFromParent);
 
 // get messages for advisors
-router.get('/api/messages/advisor/:advisorID', messageController.getMessagesForAdvisor);
+router.get('/api/messages/advisor', authenticate,  messageController.getMessagesForAdvisor);
 
 // Profile Routes for course advisor
 router.get('/profile/advisors', authenticate, courseAdvisorController.getProfile);
