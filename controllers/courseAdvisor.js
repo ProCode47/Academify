@@ -19,6 +19,8 @@ async function getProfile(req, res) {
 
     // Return the profile information of the course advisor
     const profile = {
+      userID: courseAdvisor.user._id,
+      roleID: courseAdvisor._id,
       name: `${courseAdvisor.user.firstName} ${courseAdvisor.user.lastName}`,
       email: courseAdvisor.user.email,
       photo: courseAdvisor.photo,
