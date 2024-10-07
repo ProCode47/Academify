@@ -186,7 +186,7 @@ const getMessagesFromParent = async (req, res) => {
 };
 const getMessagesForAdvisor = async (req, res) => {
   try {
-    const { advisorID } = req.params;
+    const advisorID  = req.user.id;
 
     // Find advisor by ID
     const advisor = await CourseAdvisor.findById(advisorID);
