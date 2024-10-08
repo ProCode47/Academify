@@ -51,7 +51,6 @@ const sendStudentMessageToAdvisor = async (req, res) => {
       return res.status(404).json({ message: "Student not found" });
     }
 
-
     // Create and save the message in the Messages collection
     const message = new Message({
       sender: student.user._id,
@@ -186,10 +185,10 @@ const getMessagesFromParent = async (req, res) => {
 };
 const getMessagesForAdvisor = async (req, res) => {
   try {
-    const advisorID  = req.user._id;
+    const advisorID = req.user._id;
 
     // Find advisor by ID
-    const advisor = await CourseAdvisor.findById(advisorID);
+    const advisor = await CourseAdvisor.findOne({ user: advisorID });
     if (!advisor) {
       return res.status(404).json({ message: "Advisor not found" });
     }
