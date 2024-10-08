@@ -13,7 +13,7 @@ const sendMessageToStudent = async (req, res) => {
     }
 
     // Find student by ID
-    const student = await Student.findById(studentId).populate("user");
+    const student = await Student.findOne({ user: studentId }).populate("user");
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
@@ -103,7 +103,7 @@ const sendMessageToParent = async (req, res) => {
     }
 
     // Find parent by ID
-    const parent = await Parent.findById(parentId).populate("user");
+    const parent = await Parent.findOne({ user: parentId }).populate("user");
     if (!parent) {
       return res.status(404).json({ message: "Parent not found" });
     }
