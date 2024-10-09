@@ -141,9 +141,9 @@ try {
 }
 
 module.exports = {
-getCoordinatorProfile,
-updateCoordinatorPassword,
-updateCoordinatorProfile,
-getAllCourseCoordinators,
-getAllCoursesUnderCourseCoordinator,
+ getCoordinatorProfile,
+ updateCoordinatorPassword,
+ updateCoordinatorProfile,
+ getAllCourseCoordinators,
+ getAllCoursesUnderCourseCoordinator,
 };
