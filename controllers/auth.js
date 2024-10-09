@@ -1,7 +1,7 @@
 const dotenv = require("dotenv");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { User, Student, Parent, CourseAdvisor } = require("../models");
+const { User, Student, Parent, CourseAdvisor, CourseCoordinator } = require("../models");
 const config = require("../config/config");
 
 dotenv.config();
@@ -64,6 +64,10 @@ const registerUser = async (req, res, userType) => {
         roleSpecificData = new CourseAdvisor({ user: newUser._id });
         await roleSpecificData.save();
         break;
+      case "course_coordinator":
+        roleSpecificData = new CourseCoordinator({ user: newUser._id });
+        await roleSpecificData.save();
+        break;
       default:
         return res.status(400).json({ message: "Invalid user type" });
     }
@@ -122,6 +126,13 @@ const loginUser = async (req, res, userType) => {
         }
         userID = courseAdvisor._id;
         break;
+      case "course_coordinator":
+        const courseCoordinator = await CourseCoordinator.findOne({ user: user._id });
+        if (!courseCoordinator) {
+          return res.status(404).json({ message: "Course coordinator data not found" });
+        }
+        userID = courseCoordinator._id;
+        break;
       default:
         return res.status(400).json({ message: "Invalid user type" });
     }
@@ -139,9 +150,11 @@ module.exports = {
   registerStudent: async (req, res) => registerUser(req, res, "student"),
   registerParent: async (req, res) => registerUser(req, res, "parent"),
   registerCourseAdvisor: async (req, res) => registerUser(req, res, "course_advisor"),
+  registerCourseCoordinator: async (req, res) => registerUser(req, res, "course_coordinator"), // Added course_coordinator registration
   loginStudent: async (req, res) => loginUser(req, res, "student"),
   loginParent: async (req, res) => loginUser(req, res, "parent"),
   loginCourseAdvisor: async (req, res) => loginUser(req, res, "course_advisor"),
+  loginCourseCoordinator: async (req, res) => loginUser(req, res, "course_coordinator"), // Added course_coordinator login
   generateToken,
   verifyToken,
 };
