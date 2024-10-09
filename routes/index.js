@@ -6,6 +6,7 @@ const courseController = require('../controllers/course');
 const messageController = require('../controllers/messages')
 const parentController = require('../controllers/parent')
 const courseAdvisorController = require('../controllers/courseAdvisor');
+const courseCoordinatorController = require('../controllers/courseCoordinator');
 const resultController = require('../controllers/result');
 const semesterController = require('../controllers/semester');
 const authenticate = require('../middleware/authMiddleware');
@@ -15,11 +16,13 @@ const authenticate = require('../middleware/authMiddleware');
 router.post('/register/student', authController.registerStudent);
 router.post('/register/parent', authController.registerParent);
 router.post('/register/courseadvisor', authController.registerCourseAdvisor);
+router.post('/register/coursecoordinator', authController.registerCourseCoordinator);
 
 // Login routes
 router.post('/login/student', authController.loginStudent);
 router.post('/login/parent', authController.loginParent);
 router.post('/login/courseadvisor', authController.loginCourseAdvisor);
+router.post('/login/coursecoordinator', authController.loginCourseCoordinator);
 
 // Student routes
 router.get('/student/profile', authenticate, studentController.getStudentByRegNo);
@@ -49,6 +52,17 @@ router.get('/profile/advisors', authenticate, courseAdvisorController.getProfile
 router.put('/advisors/update-password', authenticate, courseAdvisorController.updatePassword);
 router.put('/advisors/update', authenticate, courseAdvisorController.updateProfile);
 
+// Profile Routes for Course Coordinators
+router.get('/profile/coordinators', authenticate, courseCoordinatorController.getCoordinatorProfile);
+router.put('/coordinators/update-password', authenticate, courseCoordinatorController.updateCoordinatorPassword);
+router.put('/coordinators/update', authenticate, courseCoordinatorController.updateCoordinatorProfile);
+
+// Route to get all course cordinators
+router.get('/coordinators/get-all', authenticate, courseCoordinatorController.getAllCourseCoordinators);
+
+// Route to get all courses under a course coordinator
+router.get('/coordinators/get-courses/:coordinatorId', authenticate, courseCoordinatorController.getAllCoursesUnderCourseCoordinator);
+
 // Route to get all course advisors
 router.get('/advisors/get-all', courseAdvisorController.getAllCourseAdvisors);
 
@@ -56,7 +70,7 @@ router.get('/advisors/get-all', courseAdvisorController.getAllCourseAdvisors);
 router.get('/advisors/students', authenticate, courseAdvisorController.getAllStudentsUnderCourseAdvisor);
 
 // Route to upload results 
-router.post('/advisors/upload-results', authenticate, resultController.uploadResults);
+router.post('/coursecoordinator/upload-results', authenticate, resultController.uploadResults);
 
 // Route to view results
 router.get('/advisors/view-results', authenticate, resultController.viewResults);
