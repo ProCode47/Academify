@@ -150,11 +150,11 @@ module.exports = {
   registerStudent: async (req, res) => registerUser(req, res, "student"),
   registerParent: async (req, res) => registerUser(req, res, "parent"),
   registerCourseAdvisor: async (req, res) => registerUser(req, res, "course_advisor"),
-  registerCourseCoordinator: async (req, res) => registerUser(req, res, "course_coordinator"), // Added course_coordinator registration
+  registerCourseCoordinator: async (req, res) => registerUser(req, res, "course_coordinator"),
   loginStudent: async (req, res) => loginUser(req, res, "student"),
   loginParent: async (req, res) => loginUser(req, res, "parent"),
   loginCourseAdvisor: async (req, res) => loginUser(req, res, "course_advisor"),
-  loginCourseCoordinator: async (req, res) => loginUser(req, res, "course_coordinator"), // Added course_coordinator login
+  loginCourseCoordinator: async (req, res) => loginUser(req, res, "course_coordinator"), 
   generateToken,
   verifyToken,
 };
