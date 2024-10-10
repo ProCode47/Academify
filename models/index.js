@@ -17,7 +17,7 @@ const userSchema = new Schema(
     password: { type: String, required: true },
     role: {
       type: String,
-      enum: ["student", "parent", "course_advisor"],
+      enum: ["student", "parent", "course_advisor", "course_coordinator"],
       required: true,
     },
   },
@@ -90,6 +90,25 @@ const parentSchema = new Schema(
   },
   { timestamps: true }
 );
+
+// Define Course Coordinator Schema
+const courseCoordinatorSchema = new Schema(
+  {
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    courses: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",  // Referencing the Course model
+      },
+    ],
+  },
+  { timestamps: true }
+);
+
+// Define a virtual to populate the name field based on the user's first and last name
+courseCoordinatorSchema.virtual("name").get(function () {
+  return `${this.user.firstName} ${this.user.lastName}`;
+});
 
 // Define Course Advisor schema
 const courseAdvisorSchema = new Schema(
@@ -205,6 +224,7 @@ const User = mongoose.model("User", userSchema);
 const Student = mongoose.model("Student", studentSchema);
 const Parent = mongoose.model("Parent", parentSchema);
 const CourseAdvisor = mongoose.model("CourseAdvisor", courseAdvisorSchema);
+const CourseCoordinator = mongoose.model("CourseCoordinator", courseCoordinatorSchema);
 const Course = mongoose.model("Course", courseSchema);
 const Result = mongoose.model("Result", resultSchema);
 const Semester = mongoose.model("Semester", semesterSchema);
@@ -216,6 +236,7 @@ module.exports = {
   Student,
   Parent,
   CourseAdvisor,
+  CourseCoordinator,
   Course,
   Result,
   Semester,
