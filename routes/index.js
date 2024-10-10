@@ -55,13 +55,18 @@ router.put('/advisors/update', authenticate, courseAdvisorController.updateProfi
 // Profile Routes for Course Coordinators
 router.get('/profile/coordinators', authenticate, courseCoordinatorController.getCoordinatorProfile);
 router.put('/coordinators/update-password', authenticate, courseCoordinatorController.updateCoordinatorPassword);
-router.put('/coordinators/update', authenticate, courseCoordinatorController.updateCoordinatorProfile);
+router.put('/coordinators/update-profile', authenticate, courseCoordinatorController.updateCoordinatorProfile);
 
-// Route to get all course cordinators
-router.get('/coordinators/get-all', authenticate, courseCoordinatorController.getAllCourseCoordinators);
+// Coordinator Routes for Adding, removing and editing courses
+router.post("/coordinators/add-courses", authenticate, courseCoordinatorController.addCoursesToCoordinator);
+router.post("/coordinators/remove-courses", authenticate, courseCoordinatorController.removeCoursesFromCoordinator);
+router.put("/coordinators/edit-courses", authenticate, courseCoordinatorController.editCoursesForCoordinator);
+
+// Route to get all course coordinators
+router.get('/coordinators/get-all', courseCoordinatorController.getAllCourseCoordinators);
 
 // Route to get all courses under a course coordinator
-router.get('/coordinators/get-courses/:coordinatorId', authenticate, courseCoordinatorController.getAllCoursesUnderCourseCoordinator);
+router.get('/coordinators/get-courses', authenticate, courseCoordinatorController.getAllCoursesUnderCourseCoordinator);
 
 // Route to get all course advisors
 router.get('/advisors/get-all', courseAdvisorController.getAllCourseAdvisors);
@@ -70,7 +75,7 @@ router.get('/advisors/get-all', courseAdvisorController.getAllCourseAdvisors);
 router.get('/advisors/students', authenticate, courseAdvisorController.getAllStudentsUnderCourseAdvisor);
 
 // Route to upload results 
-router.post('/coursecoordinator/upload-results', authenticate, resultController.uploadResults);
+router.post('/coordinators/upload-results', authenticate, resultController.uploadResults);
 
 // Route to view results
 router.get('/advisors/view-results', authenticate, resultController.viewResults);

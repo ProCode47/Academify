@@ -140,10 +140,103 @@ try {
 }
 }
 
+// Add courses to a course coordinator
+const addCoursesToCoordinator = async (req, res) => {
+  try {
+    const { coordinatorId, courseIds } = req.body;
+
+    // Check if courseIds is provided and is an array
+    if (!courseIds || !Array.isArray(courseIds)) {
+      return res.status(400).json({ message: "Invalid or missing course IDs" });
+    }
+
+    // Find the course coordinator
+    const coordinator = await CourseCoordinator.findById(coordinatorId);
+    if (!coordinator) {
+      return res.status(404).json({ message: "Course Coordinator not found" });
+    }
+
+    // Find duplicates
+    const duplicateCourses = courseIds.filter(id => coordinator.courses.includes(id));
+    if (duplicateCourses.length > 0) {
+      return res.status(400).json({ message: `These courses are already assigned: ${duplicateCourses.join(', ')}` });
+    }
+
+    // Verify if courses exist
+    const courses = await Course.find({ _id: { $in: courseIds } });
+    if (courses.length !== courseIds.length) {
+      return res.status(400).json({ message: "Some courses not found" });
+    }
+
+    // Add courses (since no duplicates exist)
+    coordinator.courses.push(...courseIds);
+    await coordinator.save();
+
+    res.status(200).json({ message: "Courses added successfully", courses: coordinator.courses });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+// Remove courses from a course coordinator
+const removeCoursesFromCoordinator = async (req, res) => {
+  try {
+    const { coordinatorId, courseIds } = req.body;
+
+    // Find the course coordinator
+    const coordinator = await CourseCoordinator.findById(coordinatorId);
+    if (!coordinator) {
+      return res.status(404).json({ message: "Course Coordinator not found" });
+    }
+
+    // Remove specified courses
+    coordinator.courses = coordinator.courses.filter((courseId) => !courseIds.includes(courseId.toString()));
+    await coordinator.save();
+
+    res.status(200).json({ message: "Courses removed successfully", courses: coordinator.courses });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Edit courses for a course coordinator (replace old courses with new ones)
+const editCoursesForCoordinator = async (req, res) => {
+  try {
+    const { coordinatorId, newCourseIds } = req.body;
+
+    // Find the course coordinator
+    const coordinator = await CourseCoordinator.findById(coordinatorId);
+    if (!coordinator) {
+      return res.status(404).json({ message: "Course Coordinator not found" });
+    }
+
+    // Verify if the new courses exist
+    const courses = await Course.find({ _id: { $in: newCourseIds } });
+    if (courses.length !== newCourseIds.length) {
+      return res.status(400).json({ message: "Some new courses not found" });
+    }
+
+    // Replace the old course list with the new one
+    coordinator.courses = newCourseIds;
+    await coordinator.save();
+
+    res.status(200).json({ message: "Courses updated successfully", courses: coordinator.courses });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
  getCoordinatorProfile,
  updateCoordinatorPassword,
  updateCoordinatorProfile,
  getAllCourseCoordinators,
  getAllCoursesUnderCourseCoordinator,
+ addCoursesToCoordinator,
+ removeCoursesFromCoordinator,
+ editCoursesForCoordinator,
 };
