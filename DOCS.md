@@ -1269,7 +1269,7 @@ Adds the courses coordinated by course coordinator.
 #### Request Body
 
 - `coordinatorId` (string): The ID of the course coordinator to whom the courses are being added.
-- `courseIds` (array of strings): An array of course IDs to be added to the course coordinator's profile.
+- `courseCodes` (array of strings): An array of course codes to be added to the course coordinator's profile.
 
 #### Responses
 
@@ -1288,7 +1288,7 @@ Adds the courses coordinated by course coordinator.
 {
   "message": "Courses added successfully",
   "courses": [
-    "6621b94113c28c2a6caa4494"
+    "CSC 511"
   ]
 }
 ```
