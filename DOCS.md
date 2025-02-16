@@ -1089,9 +1089,8 @@ Retrieves the profile information of the authenticated course advisor.
     "roleID": "67066ddf9daf8f316b181c13",
     "name": "Chidozie Inya",
     "email": "chidozie.inya@gmail.com",
-    "courses": []
-  },
-  "token": "eyJhbGci...."
+    "courses": ["CSC101", "MTH201"]
+  }
 }
 ```
 
@@ -1118,7 +1117,7 @@ Updates the password of the authenticated course advisor.
   - **Content:** JSON object with a success message.
 - **400 Bad Request:** Invalid request body or missing required fields.
   - **Content:** JSON object with an error message.
-- **401 Unauthorized:** Authentication failure.
+- **401 Unauthorized:** Incorrect current password
   - **Content:** JSON object with an error message.
 - **404 Not Found:** Course advisor not found.
   - **Content:** JSON object with an error message.
@@ -1129,7 +1128,8 @@ Updates the password of the authenticated course advisor.
 
 ```json
 {
-  "newPassword": "newPassword123"
+  "currentPassword": "oldPassword123",
+  "newPassword": "newSecurePassword"
 }
 ```
 
@@ -1138,7 +1138,7 @@ Updates the password of the authenticated course advisor.
 ```json
 {
   "message": "Password updated successfully",
-  "token": "eyJhbGciOiJIUzI1NiIsIn..."
+  "token": "eyJhbGciOiJIUz..."
 }
 ```
 
@@ -1169,20 +1169,11 @@ Fetches all course coordinator from the database.
   {
     "_id": "67066ddf9daf8f316b181c13",
     "user": {
-      "_id": "67066ddf9daf8f316b181c11",
       "firstName": "Chidozie",
       "lastName": "Inya",
-      "email": "chidozie.inya@gmail.com",
-      "password": "hashed password",
-      "role": "course_coordinator",
-      "createdAt": "2024-10-09T11:49:51.270Z",
-      "updatedAt": "2024-10-09T18:13:14.828Z",
-      "__v": 0
+      "email": "chidozie.inya@gmail.com"
     },
-    "courses": [],
-    "createdAt": "2024-10-09T11:49:51.431Z",
-    "updatedAt": "2024-10-09T11:49:51.431Z",
-    "__v": 0
+    "courses": ["CSC101", "MTH201"]
   }
 ]
 ```
@@ -1282,22 +1273,21 @@ Adds the courses coordinated by course coordinator.
   -**Content:** JSON object containing an error message.
 - **500 Internal Server Error:** An error occurred while processing the request on the server side.
 
-#### Example Response
+#### Example 
 
 ```json
+POST /coordinators/add-courses
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+  "courseCodes": ["CSC301", "MTH401"]
+}
+
+Response:
 {
   "message": "Courses added successfully",
-  "courses": [
-    "CSC 511"
-  ]
-}
-```
-
-#### Error Response
-
-```json
-{
-  "message": "These courses are already assigned: 6621b94113c28c2a6caa4494"
+  "courses": ["CSC101", "MTH201", "CSC301", "MTH401"]
 }
 ```
 
@@ -1326,29 +1316,38 @@ Removes the courses coordinated by course coordinator.
 - **500 Internal Server Error:** An error occurred while processing the request on the server side.
   -**Content:** JSON object containing an error message.
 
-#### Example Request Body
+#### Example 
 
 ```json
+POST /coordinators/remove-courses
+Content-Type: application/json
+Authorization: Bearer <token>
+
 {
-  "coordinatorId":"67066ddf9daf8f316b181c13",
-  "courseIds": ["6621b94113c28c2a6caa4494","6621b94013c28c2a6caa4488",
-    "6621b94213c28c2a6caa4497",
-    "6621b94213c28c2a6caa4497"]
+  "courseCodes": ["MTH401"]
 }
-```
 
-#### Example Response
-
-```json
+Response:
 {
   "message": "Courses removed successfully",
-  "courses": [
-    "6621b94013c28c2a6caa4488",
-    "6621b94213c28c2a6caa4497",
-    "6621b94213c28c2a6caa4497"
-  ]
+  "courses": ["CSC101", "MTH201", "CSC301"]
 }
 ```
 ---
 
 ### 
+```json
+POST /coordinators/edit-courses
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+  "newCourseCodes": ["ENG101", "PHY101"]
+}
+
+Response:
+{
+  "message": "Courses updated successfully",
+  "courses": ["ENG101", "PHY101"]
+}
+```

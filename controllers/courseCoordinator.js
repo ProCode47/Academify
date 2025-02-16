@@ -36,11 +36,10 @@ async function getCoordinatorProfile(req, res) {
       roleID: courseCoordinator._id,
       name: `${courseCoordinator.user.firstName} ${courseCoordinator.user.lastName}`,
       email: courseCoordinator.user.email,
-      courses: courseCodes, // Now returns course codes
+      courses: courseCodes,
     };
 
-    const token = authController.generateToken(courseCoordinator.user);
-    return res.json({ profile, token });
+    return res.json({ profile });
   } catch (error) {
     console.error("Error fetching course coordinator profile:", error);
     return res.status(500).json({ message: "Internal server error" });
@@ -53,14 +52,22 @@ async function updateCoordinatorProfile(req, res) {
     const { firstName, lastName, email, courses: courseCodes } = req.body;
     const userId = req.user._id;
 
-    if (!userId || !firstName || !lastName || !email || !courseCodes) {
-      return res.status(400).json({ message: "Missing required fields" });
+    // Update User details
+    const updateUser = {};
+    if (firstName !== undefined) updateUser.firstName = firstName;
+    if (lastName !== undefined) updateUser.lastName = lastName;
+    if (email !== undefined) {
+      // Check email uniqueness
+      const existingUser = await User.findOne({ email });
+      if (existingUser && existingUser._id.toString() !== userId.toString()) {
+        return res.status(400).json({ message: "Email already in use" });
+      }
+      updateUser.email = email;
     }
 
-    // Update User details
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { firstName, lastName, email },
+      updateUser,
       { new: true }
     );
 
@@ -68,25 +75,34 @@ async function updateCoordinatorProfile(req, res) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Update CourseCoordinator details
-    const courseCoordinator = await CourseCoordinator.findOne({ user: userId });
-    if (!courseCoordinator) {
-      return res.status(404).json({ message: "Course Coordinator not found" });
-    }
+    // Update courses if provided
+    if (courseCodes) {
+      const courseCoordinator = await CourseCoordinator.findOne({ user: userId });
+      if (!courseCoordinator) {
+        return res.status(404).json({ message: "Course Coordinator not found" });
+      }
 
-    // Convert course codes to IDs
-    const courseIds = await getCourseIdsFromCodes(courseCodes);
-    courseCoordinator.courses = courseIds;
-    await courseCoordinator.save();
+      // Convert course codes to IDs
+      const courseIds = await getCourseIdsFromCodes(courseCodes);
+      courseCoordinator.courses = courseIds;
+      await courseCoordinator.save();
+    }
 
     return res.status(200).json({
       message: "Profile updated successfully",
-      user: updatedUser,
-      courses: courseCodes, // Return codes for confirmation
+      user: {
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        email: updatedUser.email
+      },
+      ...(courseCodes && { courses: courseCodes })
     });
   } catch (error) {
     console.error("Error updating profile:", error);
-    return res.status(500).json({ message: error.message || "Internal server error" });
+    if (error.message === "Some course codes are invalid") {
+      return res.status(400).json({ message: error.message });
+    }
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 
@@ -94,19 +110,19 @@ async function updateCoordinatorProfile(req, res) {
 async function getAllCourseCoordinators(req, res) {
   try {
     const coordinators = await CourseCoordinator.find()
-      .populate({
-        path: 'user',
-        select: 'firstName lastName email',
-      })
+      .populate('user', 'firstName lastName email')
       .populate({
         path: 'courses',
-        select: 'code', // Return course codes instead of IDs
+        select: 'code',
       });
 
-    // Transform response to include course codes
     const response = coordinators.map(coordinator => ({
       _id: coordinator._id,
-      user: coordinator.user,
+      user: {
+        firstName: coordinator.user.firstName,
+        lastName: coordinator.user.lastName,
+        email: coordinator.user.email
+      },
       courses: coordinator.courses.map(course => course.code),
     }));
 
@@ -120,12 +136,12 @@ async function getAllCourseCoordinators(req, res) {
 // Get all courses under a coordinator (returns codes)
 async function getAllCoursesUnderCourseCoordinator(req, res) {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
 
     const coordinator = await CourseCoordinator.findOne({ user: userId })
       .populate({
         path: 'courses',
-        select: 'code name credits type', // Include relevant course fields
+        select: 'code name credits type',
       });
 
     if (!coordinator) {
@@ -142,13 +158,14 @@ async function getAllCoursesUnderCourseCoordinator(req, res) {
 // Add courses to a coordinator using codes
 const addCoursesToCoordinator = async (req, res) => {
   try {
-    const { coordinatorId, courseCodes } = req.body;
+    const { courseCodes } = req.body;
+    const userId = req.user._id;
 
     if (!courseCodes || !Array.isArray(courseCodes)) {
       return res.status(400).json({ message: "Invalid course codes" });
     }
 
-    const coordinator = await CourseCoordinator.findById(coordinatorId)
+    const coordinator = await CourseCoordinator.findOne({ user: userId })
       .populate('courses');
 
     if (!coordinator) {
@@ -180,62 +197,70 @@ const addCoursesToCoordinator = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: error.message || "Internal server error" });
+    if (error.message === "Some course codes are invalid") {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
 // Controller function to update the course coordinator's password
 async function updateCoordinatorPassword(req, res) {
   try {
-   const userId = req.user._id; // Retrieve the authenticated user's ID
-  
-   // Extract the new password from the request body
-   const { newPassword } = req.body;
-  
-   // Find the user record associated with the user ID
-   const user = await User.findById(userId);
-  
-   if (!user) {
-    return res.status(404).json({ message: "User not found" });
-   }
-  
-   // Hash the new password before saving
-   const hashedPassword = await bcrypt.hash(newPassword, 10);
-  
-   // Update the password field of the user record
-   user.password = hashedPassword;
-   await user.save();
-  
-   // Generate token for the updated user
-   const token = authController.generateToken(user);
-  
-   return res.json({ message: "Password updated successfully", token });
+    const userId = req.user._id;
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: "Current and new password are required" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Verify current password
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Current password is incorrect" });
+    }
+
+    // Hash and update password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    // Generate new token
+    const token = authController.generateToken(user);
+    return res.json({ message: "Password updated successfully", token });
   } catch (error) {
-   console.error("Error updating password:", error);
-   return res.status(500).json({ message: "Internal server error" });
+    console.error("Error updating password:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
-  }
+}
 
 // Remove courses from a coordinator using codes
 const removeCoursesFromCoordinator = async (req, res) => {
   try {
-    const { coordinatorId, courseCodes } = req.body;
+    const { courseCodes } = req.body;
+    const userId = req.user._id;
 
     if (!courseCodes || !Array.isArray(courseCodes)) {
       return res.status(400).json({ message: "Invalid course codes" });
     }
 
-    const coordinator = await CourseCoordinator.findById(coordinatorId);
+    const coordinator = await CourseCoordinator.findOne({ user: userId });
     if (!coordinator) {
       return res.status(404).json({ message: "Coordinator not found" });
     }
 
     // Convert codes to IDs
     const courseIdsToRemove = await getCourseIdsFromCodes(courseCodes);
+    const courseIdsToRemoveStrings = courseIdsToRemove.map(id => id.toString());
 
     // Filter out the IDs to remove
     coordinator.courses = coordinator.courses.filter(
-      courseId => !courseIdsToRemove.includes(courseId.toString())
+      courseId => !courseIdsToRemoveStrings.includes(courseId.toString())
     );
 
     await coordinator.save();
@@ -248,20 +273,24 @@ const removeCoursesFromCoordinator = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: error.message || "Internal server error" });
+    if (error.message === "Some course codes are invalid") {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
 // Edit courses for a coordinator using codes
 const editCoursesForCoordinator = async (req, res) => {
   try {
-    const { coordinatorId, newCourseCodes } = req.body;
+    const { newCourseCodes } = req.body;
+    const userId = req.user._id;
 
     if (!newCourseCodes || !Array.isArray(newCourseCodes)) {
       return res.status(400).json({ message: "Invalid course codes" });
     }
 
-    const coordinator = await CourseCoordinator.findById(coordinatorId);
+    const coordinator = await CourseCoordinator.findOne({ user: userId });
     if (!coordinator) {
       return res.status(404).json({ message: "Coordinator not found" });
     }
@@ -279,7 +308,10 @@ const editCoursesForCoordinator = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: error.message || "Internal server error" });
+    if (error.message === "Some course codes are invalid") {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
