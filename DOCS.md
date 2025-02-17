@@ -1115,9 +1115,7 @@ Updates the password of the authenticated course advisor.
 
 - **200 OK:** Password updated successfully.
   - **Content:** JSON object with a success message.
-- **400 Bad Request:** Invalid request body or missing required fields.
-  - **Content:** JSON object with an error message.
-- **401 Unauthorized:** Incorrect current password
+- **400 Bad Request:** Incorrect current password
   - **Content:** JSON object with an error message.
 - **404 Not Found:** Course advisor not found.
   - **Content:** JSON object with an error message.

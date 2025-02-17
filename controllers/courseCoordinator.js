@@ -222,7 +222,7 @@ async function updateCoordinatorPassword(req, res) {
     // Verify current password
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Current password is incorrect" });
+      return res.status(400).json({ message: "Current password is incorrect" });
     }
 
     // Hash and update password
